@@ -1,50 +1,57 @@
 package com.example.myrealog.model;
 
-import com.example.myrealog.dto.request.CreateArticleRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Entity
-@Table(name = "articles")
-@NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Article {
+@Table(name = "articles")
+public class Article extends BaseTimeEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "article_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany(mappedBy = "article", cascade = {REMOVE}, orphanRemoval = true)
+    private List<ArticleAttachment> articleAttachments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article", cascade = {REMOVE}, orphanRemoval = true)
+    private List<ArticleReaction> articleReactions = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id")
+    private Topic topic;
+
+    @OneToMany(mappedBy = "article", cascade = {REMOVE}, orphanRemoval = true)
+    private List<Discussion> discussions = new ArrayList<>();
+
     private String title;
     private String content;
     private String slug;
-
-    @Column(name = "featured_image_url")
-    private String featuredImageUrl;
-
-    @Column(name = "meta_description")
-    private String metaDescription;
+    private String thumbnailUrl;
+    private String excerpt;
+    private int reactionCount;
+    private int discussionCount;
 
     @Enumerated(EnumType.STRING)
-    private ArticleStatus status;
+    private Status status;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
-
-    @Column(name = "updated_date")
-    private LocalDateTime updatedDate;
-
-
-    public static Article createFromRequest(CreateArticleRequest request) {
-        return Article.builder()
-                .title(request.getTitle())
-                .content(request.getContent())
-                .slug(request.getSlug())
-                .featuredImageUrl(request.getFeaturedImageUrl())
-                .metaDescription(request.getMetaDescription())
-                .status(request.getStatus())
-                .build();
+    private enum Status {
+        PRIVATE, PUBLIC, DRAFT
     }
 }
