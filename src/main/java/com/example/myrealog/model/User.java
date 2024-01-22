@@ -1,7 +1,9 @@
 package com.example.myrealog.model;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import static jakarta.persistence.FetchType.*;
 @Entity
 @Getter
 @Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseTimeEntity {
 
     @Id
@@ -38,9 +41,12 @@ public class User extends BaseTimeEntity {
     @Column(unique = true)
     private String username;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
 
+    public User(String email) {
+        this.email = email;
+    }
 }
