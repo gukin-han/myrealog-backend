@@ -1,6 +1,7 @@
 package com.example.myrealog.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +39,7 @@ public class User extends BaseTimeEntity {
     @OneToMany(mappedBy = "user", cascade = {REMOVE}, orphanRemoval = true)
     private List<DiscussionReaction> discussionReactions = new ArrayList<>();
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)
@@ -46,7 +47,13 @@ public class User extends BaseTimeEntity {
 
     private String password;
 
-    public User(String email) {
+    public User(String email, String username) {
         this.email = email;
+        this.username = username;
+    }
+
+    public void updateProfile(Profile profile) {
+        this.profile = profile;
+        profile.updateUser(this);
     }
 }

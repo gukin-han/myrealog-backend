@@ -15,19 +15,19 @@ import static com.example.myrealog.auth.OAuthProvider.GOOGLE;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/login/oauth")
+@RequestMapping("/api/v1/login/oauth")
 public class OAuthController {
 
     public static final int SEVEN_DAYS = 7 * 24 * 60 * 60;
     private final OAuthService oAuthService;
     private final UserRepository userRepository;
 
-    @GetMapping("/google") // http://localhost:8080/login/oauth/google
+    @GetMapping("/google") // http://localhost:8080/api/v1/login/oauth/google
     public void redirectToOAuthServer(HttpServletResponse response) throws IOException {
         response.sendRedirect(GOOGLE.getOAuthLoginUrl());
     }
 
-    @GetMapping("/callback/google")
+    @GetMapping("/callback/google") // http://localhost:8080/api/v1/login/oauth/callback/google
     public ResponseEntity<Void> login(@RequestParam("code") String code) {
         final String userEmail = oAuthService.getUserEmail(code);
         final String token = oAuthService.generateToken(userEmail);

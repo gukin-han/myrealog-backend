@@ -32,7 +32,17 @@ public class Profile extends BaseTimeEntity{
     private String avatarUrl;
     private String bio;
 
-    public Profile(User user) {
+    public Profile(String displayName, String bio) {
+        this(displayName, bio, "");
+    }
+
+    public Profile(String displayName, String bio, String avatarUrl) {
+        this.displayName = displayName;
+        this.bio = bio;
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void updateUser(User user) {
         this.user = user;
     }
 
