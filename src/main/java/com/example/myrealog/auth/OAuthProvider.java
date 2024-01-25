@@ -11,7 +11,7 @@ public enum OAuthProvider {
             "https://oauth2.googleapis.com/token",
             "1093181076891-hb8imppppmtd0gj52hqnu3ed9dt3j5ka.apps.googleusercontent.com",
             System.getenv("SECRETE_KEY_GOOGLE"),
-            "http://localhost:8080/api/v1/login/oauth/callback/google",
+            "http://localhost:8080/api/v1/signin/oauth/callback/google",
             "code",
             "https://www.googleapis.com/auth/userinfo.email",
             "authorization_code",
