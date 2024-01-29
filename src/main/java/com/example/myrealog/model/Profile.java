@@ -1,5 +1,6 @@
 package com.example.myrealog.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Profile extends BaseTimeEntity{
     @OneToMany(mappedBy = "profile", cascade = {REMOVE}, orphanRemoval = true)
     private List<SocialChannel> socialChannels = new ArrayList<>();
 
+    @JsonIgnore
     @OneToOne(mappedBy = "profile")
     @JoinColumn(nullable = false)
     private User user;

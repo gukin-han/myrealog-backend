@@ -16,7 +16,7 @@ public class UserService {
     private final ProfileRepository profileRepository;
 
     @Transactional
-    public User signup(User user, Profile profile) {
+    public User signUp(User user, Profile profile) {
 
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 유저이름입니다.");

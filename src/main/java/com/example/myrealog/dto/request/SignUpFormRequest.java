@@ -3,7 +3,7 @@ package com.example.myrealog.dto.request;
 import lombok.Data;
 
 @Data
-public class SignupFormRequest {
+public class SignUpFormRequest {
 
     private String email;
     private String username;
