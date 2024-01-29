@@ -1,5 +1,7 @@
 # MyReaLog API Server
-last updated: 2023.12.29
+last updated: 
+* 2024.01.29 - Api specification and others added
+* 2023.12.23 - README initially created
 <br />
 
 ## API Specification
@@ -38,6 +40,14 @@ last updated: 2023.12.29
 * 401 Unauthorized: Authentication fail
 * 400 Bad Request: Successfully authenticated but not be able to find user info
 
+<br />
+
 ## ERD
 
 ![my-real-blog](https://github.com/gukin-han/myrealog-backend/assets/115940366/3d3fcf71-12c6-4ecb-af99-f875d445cfc1)
+
+<br />
+
+## Expected Architecture
+
+![](https://github.com/gukin-han/myrealog-backend/assets/115940366/e193e010-6a6b-49a7-9284-2b35a2744f9b)
