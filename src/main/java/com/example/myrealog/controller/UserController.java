@@ -37,7 +37,7 @@ public class UserController {
 
             final Optional<User> user = userRepository.findById(Long.parseLong(userId));
             return user.map(u -> ResponseEntity.ok(new MeDto(u)))
-                    .orElseGet(() -> ResponseEntity.notFound().build());
+                    .orElseGet(() -> ResponseEntity.badRequest().build());
 
         } catch (JwtException e) {
             log.error("액세스 토큰 검증에 실패했습니다.");
