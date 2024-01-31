@@ -47,7 +47,10 @@ public class OAuthService {
         return signIn(Optional.of(signedUpUser), null, HttpStatus.CREATED);
     }
 
-    private ResponseEntity<Void> signIn(Optional<User> optionalUser, String userEmail, HttpStatus status) {
+    private ResponseEntity<Void> signIn(Optional<User> optionalUser,
+                                        String userEmail,
+                                        HttpStatus status) {
+
         String redirectUrl = REDIRECT_URL_BASE;
         ResponseCookie cookie;
 
@@ -131,7 +134,7 @@ public class OAuthService {
                 .compact();
     }
 
-    public String validateTokenAndGetEmail(String token) throws JwtException {
+    public String validateTokenAndGetSubject(String token) throws JwtException {
         final Jws<Claims> claimsJws = Jwts
                 .parser()
                 .verifyWith(SECRET) // error 발생 지점

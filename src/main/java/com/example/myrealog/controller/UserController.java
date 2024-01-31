@@ -33,14 +33,17 @@ public class UserController {
 
         try {
             final String accessToken = request.getHeader("Authorization").substring(7);
-            final String userId = oAuthService.validateTokenAndGetEmail(accessToken); // 유효기간 만료 및 위변조 에러 처리
+            final String userId = oAuthService.validateTokenAndGetSubject(accessToken); // 유효기간 만료 및 위변조 에러 처리
 
             final Optional<User> user = userRepository.findById(Long.parseLong(userId));
             return user.map(u -> ResponseEntity.ok(new MeDto(u)))
-                    .orElseGet(() -> ResponseEntity.badRequest().build());
+                    .orElseGet(() -> {
+                        log.error("존재하지 않는 유저입니다.");
+                        return ResponseEntity.badRequest().build();
+                    });
 
         } catch (JwtException e) {
-            log.error("액세스 토큰 검증에 실패했습니다.");
+            log.error("액세스 토큰 검증에 실패했습니다???.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
@@ -48,7 +51,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpFormRequest signUpForm, HttpServletRequest request) {
         final String signUpToken = request.getHeader("Authorization").substring(7);
-        final String email = oAuthService.validateTokenAndGetEmail(signUpToken);
+        final String email = oAuthService.validateTokenAndGetSubject(signUpToken);
 
         final User signedUpUser = userService.signUp(
                 new User(email, signUpForm.getUsername()),

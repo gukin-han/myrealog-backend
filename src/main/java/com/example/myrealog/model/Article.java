@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static jakarta.persistence.CascadeType.REMOVE;
 
@@ -40,7 +41,10 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = {REMOVE}, orphanRemoval = true)
     private List<Discussion> discussions = new ArrayList<>();
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String content;
     private String slug;
     private String thumbnailUrl;
@@ -51,7 +55,31 @@ public class Article extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    private enum Status {
+    public Article(User user, String title, String content, String excerpt, Status status) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.status = status;
+        this.excerpt = excerpt;
+        this.slug = generateSlug(title);
+        this.thumbnailUrl = ""; // ToDo: Create Feature Adding thumbnail
+    }
+
+    public enum Status {
         PRIVATE, PUBLIC, DRAFT
+    }
+
+    // ToDo: Abstract out this method
+    private String generateSlug(String title) {
+        String slug = title
+                        .replaceAll("[^a-zA-Z0-9가-힣\\-\\s]", "")
+                        .replaceAll("\\s+", "-");
+
+        String randomString = UUID
+                        .randomUUID()
+                        .toString()
+                        .substring(0, 8);
+
+        return slug + "-" + randomString;
     }
 }
