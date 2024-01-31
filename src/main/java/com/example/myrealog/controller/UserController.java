@@ -31,21 +31,14 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> getMe(HttpServletRequest request) {
 
-        try {
-            final String accessToken = request.getHeader("Authorization").substring(7);
-            final String userId = oAuthService.validateTokenAndGetSubject(accessToken); // 유효기간 만료 및 위변조 에러 처리
+        final String userId = (String) request.getAttribute("userId");
 
-            final Optional<User> user = userRepository.findById(Long.parseLong(userId));
-            return user.map(u -> ResponseEntity.ok(new MeDto(u)))
-                    .orElseGet(() -> {
-                        log.error("존재하지 않는 유저입니다.");
-                        return ResponseEntity.badRequest().build();
-                    });
-
-        } catch (JwtException e) {
-            log.error("액세스 토큰 검증에 실패했습니다???.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        final Optional<User> user = userRepository.findById(Long.parseLong(userId));
+        return user.map(u -> ResponseEntity.ok(new MeDto(u)))
+                .orElseGet(() -> {
+                    log.error("존재하지 않는 유저입니다.");
+                    return ResponseEntity.badRequest().build();
+                });
     }
 
     @PostMapping
