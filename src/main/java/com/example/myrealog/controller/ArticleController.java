@@ -1,17 +1,16 @@
 package com.example.myrealog.controller;
 
+import com.example.myrealog.auth.Authorized;
 import com.example.myrealog.auth.OAuthService;
 import com.example.myrealog.dto.request.ArticlePublishFormRequest;
 import com.example.myrealog.model.Article;
 import com.example.myrealog.model.User;
 import com.example.myrealog.service.ArticleService;
-import com.example.myrealog.service.UserService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,30 +26,26 @@ import static com.example.myrealog.model.Article.Status.PUBLIC;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final UserService userService;
     private final OAuthService oAuthService;
 
     @PostMapping
-    public ResponseEntity<Void> publishArticle(@RequestBody @Valid ArticlePublishFormRequest form,
-                                               HttpServletRequest request) {
+    public ResponseEntity<Void> publishArticle(@Authorized User user,
+                                               @RequestBody @Valid ArticlePublishFormRequest form) {
 
-        try {
-            final String accessToken = request.getHeader("Authorization").substring(7);
-            final String userId = oAuthService.validateTokenAndGetSubject(accessToken);
+            final Article article = new Article(
+                    user,
+                    form.getTitle(),
+                    form.getContent(),
+                    form.getExcerpt(),
+                    PUBLIC);
 
-            final User findUser = userService.findOneByUserId(Long.parseLong(userId));
-            final Article article = new Article(findUser, form.getTitle(), form.getContent(), form.getExcerpt(), PUBLIC);
             final Article publishedArticle = articleService.publishArticle(article);
 
-            String redirectUri = "/@" + findUser.getUsername() + "/" + publishedArticle.getSlug();
+            String redirectUri = "/@" + user.getUsername() + "/" + publishedArticle.getSlug();
             return ResponseEntity
                     .created(URI.create(redirectUri))
                     .build();
 
-        } catch (JwtException e) {
-            log.error("액세스 토큰 검증에 실패했습니다.");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
     }
 
 //    @GetMapping("/{username}/{slug}")

@@ -1,22 +1,18 @@
 package com.example.myrealog.controller;
 
+import com.example.myrealog.auth.Authorized;
 import com.example.myrealog.auth.OAuthService;
 import com.example.myrealog.dto.request.SignUpFormRequest;
 import com.example.myrealog.model.Profile;
 import com.example.myrealog.model.User;
-import com.example.myrealog.repository.UserRepository;
 import com.example.myrealog.service.UserService;
-import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -25,24 +21,17 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
     private final OAuthService oAuthService;
 
     @GetMapping("/me")
-    public ResponseEntity<?> getMe(HttpServletRequest request) {
-
-        final String userId = (String) request.getAttribute("userId");
-
-        final Optional<User> user = userRepository.findById(Long.parseLong(userId));
-        return user.map(u -> ResponseEntity.ok(new MeDto(u)))
-                .orElseGet(() -> {
-                    log.error("존재하지 않는 유저입니다.");
-                    return ResponseEntity.badRequest().build();
-                });
+    public ResponseEntity<MeDto> getMe(@Authorized User user) {
+        return ResponseEntity.ok(new MeDto(user));
     }
 
     @PostMapping
-    public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpFormRequest signUpForm, HttpServletRequest request) {
+    public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpFormRequest signUpForm,
+                                       HttpServletRequest request) {
+
         final String signUpToken = request.getHeader("Authorization").substring(7);
         final String email = oAuthService.validateTokenAndGetSubject(signUpToken);
 
