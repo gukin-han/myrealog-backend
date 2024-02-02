@@ -22,7 +22,9 @@ public class OAuthController {
     }
 
     @GetMapping("/callback/google") // http://localhost:8080/api/v1/signin/oauth/callback/google
-    public ResponseEntity<Void> signIn(@RequestParam("code") String code) {
-        return oAuthService.signIn(code);
+    public ResponseEntity<?> login(@RequestParam("code") String code) {
+        // 가입된 유저는 email이 존재한다. -> accessToken을 반환한다.
+        // 가입되지 않은 유저는 email이 없다. -> signupToken을 반환한다.
+        return oAuthService.signInOrGetSignUpToken(code);
     }
 }

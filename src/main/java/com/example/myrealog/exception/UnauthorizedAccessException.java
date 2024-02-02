@@ -1,4 +1,4 @@
-package com.example.myrealog.auth;
+package com.example.myrealog.exception;
 
 public class UnauthorizedAccessException extends RuntimeException {
 }

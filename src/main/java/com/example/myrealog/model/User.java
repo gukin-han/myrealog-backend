@@ -1,10 +1,13 @@
 package com.example.myrealog.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,10 +44,17 @@ public class User extends BaseTimeEntity {
     @Column(unique = true, nullable = false)
     private String username;
 
+    @Email
     @Column(unique = true, nullable = false)
     private String email;
 
     private String password;
+
+    private LocalDateTime recentlyPublishedDate;
+
+    public void updateRecentlyPublishedDate(LocalDateTime date) {
+        recentlyPublishedDate = date;
+    }
 
     public User(String email, String username) {
         this.email = email;

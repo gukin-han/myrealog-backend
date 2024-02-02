@@ -26,18 +26,33 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    @Transactional(readOnly = true)
-    public User findOneByUserId(Long id) throws IllegalArgumentException {
+    @Transactional
+    public User findOneByEmail(String email) throws IllegalArgumentException {
+        return userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    @Transactional
+    public User findOneById(Long id) throws IllegalArgumentException {
         return userRepository.findById(id)
-                .orElseThrow(() -> {
-                    log.error("존재하지 않는 사용자 ID: {}", id);
-                    return new IllegalArgumentException("존재하지 않는 유저입니다.");
-                });
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    @Transactional
+    public User findUserAndProfileByEmail(String email) {
+        return userRepository.findUserAndProfileByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    }
+
+    @Transactional
+    public User findUserAndProfileById(Long id) {
+        return userRepository.findUserAndProfileById(id)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
     }
 
     private void validateDuplicateUser(User user) {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("이미 존재하는 유저이름입니다.");
+        if (userRepository.existsByEmailAndUsername(user.getEmail(), user.getUsername())) {
+            throw new IllegalArgumentException("중복된 유저이름 혹은 이메일입니다.");
         }
     }
 }
