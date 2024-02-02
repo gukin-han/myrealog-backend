@@ -1,6 +1,7 @@
 package com.example.myrealog.auth;
 
 import com.example.myrealog.exception.UnauthorizedAccessException;
+import com.example.myrealog.utils.WebUtils;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import static com.example.myrealog.utils.JwtUtils.validateJwtAndGetSubject;
+import static com.example.myrealog.utils.WebUtils.extractTokenFromRequest;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +40,7 @@ public class AuthorizedUserArgumentResolver implements HandlerMethodArgumentReso
 
         try {
             log.info("AUTHORIZATION START [{}][{}]", uuid, requestURI);
-            final String accessToken = request.getHeader("Authorization").substring(7);
+            final String accessToken = extractTokenFromRequest(request);
             final String userId = validateJwtAndGetSubject(accessToken);
             final UserPrincipal userPrincipal = new UserPrincipal(Long.parseLong(userId));
             log.info("AUTHORIZATION SUCCESS [{}][{}]", uuid, requestURI);
@@ -49,4 +51,5 @@ public class AuthorizedUserArgumentResolver implements HandlerMethodArgumentReso
             throw new UnauthorizedAccessException();
         }
     }
+
 }
