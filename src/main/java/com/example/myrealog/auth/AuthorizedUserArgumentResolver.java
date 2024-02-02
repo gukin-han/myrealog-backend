@@ -1,7 +1,6 @@
 package com.example.myrealog.auth;
 
-import com.example.myrealog.model.User;
-import com.example.myrealog.repository.UserRepository;
+import com.example.myrealog.exception.UnauthorizedAccessException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -12,27 +11,26 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import static com.example.myrealog.utils.JwtUtils.validateJwtAndGetSubject;
+
 @Slf4j
 @RequiredArgsConstructor
 public class AuthorizedUserArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final OAuthService oAuthService;
-    private final UserRepository userRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
 
         final boolean hasAuthorizedAnnotation = parameter.hasParameterAnnotation(Authorized.class);
-        final boolean hasUserType = User.class.isAssignableFrom(parameter.getParameterType());
+        final boolean hasStringType = UserPrincipal.class.isAssignableFrom(parameter.getParameterType());
 
-        return hasUserType && hasAuthorizedAnnotation;
+        return hasStringType && hasAuthorizedAnnotation;
     }
 
     @Override
     public Object resolveArgument(MethodParameter parameter,
                                   ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws Exception {
+                                  WebDataBinderFactory binderFactory) {
 
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final String uuid = (String) request.getAttribute("uuid");
@@ -41,20 +39,13 @@ public class AuthorizedUserArgumentResolver implements HandlerMethodArgumentReso
         try {
             log.info("AUTHORIZATION START [{}][{}]", uuid, requestURI);
             final String accessToken = request.getHeader("Authorization").substring(7);
-            final String userId = oAuthService.validateTokenAndGetSubject(accessToken);
-
-
-            final User user = userRepository.findUserAndProfileByUserId(Long.parseLong(userId))
-                    .orElseThrow(() -> {
-                        log.error("AUTHORIZATION ERROR [{}][{}]", uuid, requestURI);
-                        return new UnauthorizedAccessException();
-                    });
-
+            final String userId = validateJwtAndGetSubject(accessToken);
+            final UserPrincipal userPrincipal = new UserPrincipal(Long.parseLong(userId));
             log.info("AUTHORIZATION SUCCESS [{}][{}]", uuid, requestURI);
-            return user;
+            return userPrincipal;
 
         } catch (JwtException err) {
-            log.error("AUTHORIZATION ERROR [{}][{}]", uuid, requestURI);
+            log.error("AUTHORIZATION FAIL [{}][{}]", uuid, requestURI);
             throw new UnauthorizedAccessException();
         }
     }
