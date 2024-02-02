@@ -20,4 +20,5 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "and a.status = :status")
     List<Article> findByUserIdAndStatus(@Param("userId") Long userId,
                                         @Param("status") Status status);
+
 }
