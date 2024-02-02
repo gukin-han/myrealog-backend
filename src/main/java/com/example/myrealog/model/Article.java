@@ -62,14 +62,13 @@ public class Article extends BaseTimeEntity {
         this.status = status;
         this.excerpt = excerpt;
         this.slug = generateSlug(title);
-        this.thumbnailUrl = ""; // ToDo: Create Feature Adding thumbnail
+        this.thumbnailUrl = "";
     }
 
     public enum Status {
         PRIVATE, PUBLIC, DRAFT
     }
 
-    // ToDo: Abstract out this method
     private String generateSlug(String title) {
         String slug = title
                         .replaceAll("[^a-zA-Z0-9가-힣\\-\\s]", "")
