@@ -18,11 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final OAuthService oAuthService;
-    private final UserRepository userRepository;
-
     @Bean
-    public FilterRegistrationBean authFilter() {
+    public FilterRegistrationBean<Filter> authFilter() {
         final FilterRegistrationBean<Filter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
         filterFilterRegistrationBean.setFilter(new LogFilter());
         filterFilterRegistrationBean.setOrder(1);
@@ -32,6 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthorizedUserArgumentResolver(oAuthService, userRepository));
+        resolvers.add(new AuthorizedUserArgumentResolver());
     }
 }
