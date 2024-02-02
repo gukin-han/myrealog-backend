@@ -55,8 +55,7 @@ public class Article extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Article(User user, String title, String content, String excerpt, Status status) {
-        this.user = user;
+    public Article(String title, String content, String excerpt, Status status) {
         this.title = title;
         this.content = content;
         this.status = status;
@@ -67,6 +66,10 @@ public class Article extends BaseTimeEntity {
 
     public enum Status {
         PRIVATE, PUBLIC, DRAFT
+    }
+
+    public void setAuthor(User user) {
+        this.user = user;
     }
 
     private String generateSlug(String title) {
