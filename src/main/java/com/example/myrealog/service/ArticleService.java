@@ -1,5 +1,6 @@
 package com.example.myrealog.service;
 
+import com.example.myrealog.dto.request.ArticlePublishFormRequest;
 import com.example.myrealog.exception.NotEnoughDaysForPublishingException;
 import com.example.myrealog.model.Article;
 import com.example.myrealog.model.User;
@@ -10,9 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.example.myrealog.model.Article.Status.DRAFT;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +25,9 @@ public class ArticleService {
         final User findUser = userService.findOneById(userId);
         final LocalDateTime date = findUser.getRecentlyPublishedDate();
 
-        if (canPublishArticle(date)) {
+        if (true) {
             findUser.updateRecentlyPublishedDate(LocalDateTime.now());
-            article.setAuthor(findUser);
+            article.setUser(findUser);
             return articleRepository.save(article);
         } else {
             throw new NotEnoughDaysForPublishingException();
@@ -47,7 +45,31 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public List<Article> getDrafts(Long userId) {
-        return articleRepository.findByUserIdAndStatus(userId, DRAFT);
+    public Article findArticleBySlugAndUsername(final String slug,
+                                                final String username) {
+
+        return articleRepository.findBySlugAndUsername(slug, username)
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Transactional
+    public void deleteById(Long articleId, Long userId) {
+        final Article findArticle = findUpdatableArticleByArticleIdAndUserId(articleId, userId);
+        articleRepository.delete(findArticle);
+    }
+
+    @Transactional
+    public void updateArticle(Long articleId, Long userId, ArticlePublishFormRequest form) {
+        final Article findArticle = findUpdatableArticleByArticleIdAndUserId(articleId, userId);
+
+        findArticle.updateTitle(form.getTitle());
+        findArticle.updateContent(form.getContent());
+        findArticle.updateExcerpt(form.getExcerpt());
+    }
+
+    @Transactional
+    public Article findUpdatableArticleByArticleIdAndUserId(Long articleId, Long userId) {
+        return articleRepository.findByArticleIdAndUserId(articleId, userId)
+                .orElseThrow(IllegalArgumentException::new);
     }
 }

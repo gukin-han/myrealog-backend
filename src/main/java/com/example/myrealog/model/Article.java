@@ -44,7 +44,7 @@ public class Article extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
     private String slug;
     private String thumbnailUrl;
@@ -68,8 +68,28 @@ public class Article extends BaseTimeEntity {
         PRIVATE, PUBLIC, DRAFT
     }
 
-    public void setAuthor(User user) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    public void updateTitle(String title) {
+        if (isValidInput(title)) this.title = title;
+    }
+
+    public void updateContent(String content) {
+        if (isValidInput(content)) this.content = content;
+    }
+
+    public void updateExcerpt(String excerpt) {
+        if (isValidInput(excerpt)) this.excerpt = excerpt;
+    }
+
+    private boolean isValidInput(String input) {
+        return input != null && !input.isEmpty() && !input.isBlank();
+    }
+
+    private static void validateInput(String content) {
+
     }
 
     private String generateSlug(String title) {

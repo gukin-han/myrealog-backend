@@ -34,8 +34,7 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> getMe(@Authorized UserPrincipal principal) {
         final User user = userService.findUserAndProfileById(principal.getUserId());
-        final ResponseDto<MeDto> body = ResponseDto.ok(new MeDto(user));
-        return ResponseEntity.ok(body);
+        return ResponseEntity.ok(ResponseDto.of(new MeDto(user)));
     }
 
     @PostMapping
@@ -49,10 +48,14 @@ public class UserController {
                 new Profile(signUpForm.getDisplayName(), signUpForm.getBio()));
 
         final AuthToken authToken = oAuthService.signIn(signedUpUser);
-        final ResponseDto<AuthToken> responseDto = new ResponseDto<>(203, "회원가입을 완료했습니다.", authToken);
         final ResponseCookie responseCookie = WebUtils.generateCookie(authToken.getType().name(), authToken.getValue());
 
-        return WebUtils.buildRedirectResponse("/redirect", responseCookie, HttpStatus.CREATED, responseDto);
+        return WebUtils.buildRedirectResponse(
+                "/redirect",
+                responseCookie,
+                HttpStatus.CREATED,
+                ResponseDto.of(authToken)
+        );
     }
 
     @Data

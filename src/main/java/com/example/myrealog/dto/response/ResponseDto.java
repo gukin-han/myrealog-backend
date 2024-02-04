@@ -6,20 +6,14 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ResponseDto <T> {
-    private Integer status;
     private String message;
     private T data;
 
-    public static <T> ResponseDto<T> ok(T data) {
-        return new ResponseDto<>(200, null, data);
+    public static <T> ResponseDto<T> of(T data) {
+        return of("", data);
     }
 
-    public static ResponseDto<?> badRequest(String message) {
-        return new ResponseDto<>(400, message, null);
+    public static <T> ResponseDto<T> of(String message, T data) {
+        return new ResponseDto<>(message, data);
     }
-
-    public static ResponseDto<?> unauthorized(String message) {
-        return new ResponseDto<>(401, message, null);
-    }
-
 }
