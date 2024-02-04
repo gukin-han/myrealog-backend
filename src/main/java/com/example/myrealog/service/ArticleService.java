@@ -1,7 +1,7 @@
 package com.example.myrealog.service;
 
-import com.example.myrealog.dto.request.ArticlePublishFormRequest;
-import com.example.myrealog.exception.NotEnoughDaysForPublishingException;
+import com.example.myrealog.common.dto.request.ArticlePublishFormRequest;
+import com.example.myrealog.common.exception.NotEnoughDaysForPublishingException;
 import com.example.myrealog.model.Article;
 import com.example.myrealog.model.User;
 import com.example.myrealog.repository.ArticleRepository;
@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +72,10 @@ public class ArticleService {
     public Article findUpdatableArticleByArticleIdAndUserId(Long articleId, Long userId) {
         return articleRepository.findByArticleIdAndUserId(articleId, userId)
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Article> getRecentArticles() {
+        return articleRepository.findAllWithUserProfile();
     }
 }

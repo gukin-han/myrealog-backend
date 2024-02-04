@@ -45,4 +45,13 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             """)
     Optional<Article> findByArticleIdAndUserId(@Param("articleId") final Long articleId,
                                                @Param("userId") final Long userId);
+
+    @Query("""
+            SELECT article
+            FROM Article article
+            JOIN FETCH article.user user
+            JOIN FETCH user.profile profile
+           """)
+    List<Article> findAllWithUserProfile();
+
 }

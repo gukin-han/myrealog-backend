@@ -1,9 +1,9 @@
 package com.example.myrealog.controller;
 
-import com.example.myrealog.auth.Authorized;
-import com.example.myrealog.auth.UserPrincipal;
-import com.example.myrealog.dto.request.ArticlePublishFormRequest;
-import com.example.myrealog.dto.response.ResponseDto;
+import com.example.myrealog.common.auth.Authorized;
+import com.example.myrealog.common.auth.UserPrincipal;
+import com.example.myrealog.common.dto.request.ArticlePublishFormRequest;
+import com.example.myrealog.common.dto.response.ResponseWrapper;
 import com.example.myrealog.model.Article;
 import com.example.myrealog.service.ArticleService;
 import jakarta.validation.Valid;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.example.myrealog.model.Article.Status.PUBLIC;
 
@@ -37,12 +39,19 @@ public class ArticleController {
             return ResponseEntity.created(URI.create(redirectUri)).build();
     }
 
+    @GetMapping("/recent")
+    public ResponseEntity<?> getRecentArticles() {
+        final List<Article> recentArticles = articleService.getRecentArticles();
+        final List<ArticleCardDto> dto = recentArticles.stream().map(ArticleCardDto::new).toList();
+        return ResponseEntity.ok(ResponseWrapper.of(dto));
+    }
+
     @GetMapping("/{username}/{slug}")
     public ResponseEntity<?> getOneBySlugAndUsername(@PathVariable("username") String username,
                                                      @PathVariable("slug") String slug) {
 
         final Article article = articleService.findArticleBySlugAndUsername(slug, username);
-        return ResponseEntity.ok(ResponseDto.of(new ArticleViewDto(article)));
+        return ResponseEntity.ok(ResponseWrapper.of(new ArticleViewDto(article)));
     }
 
     @DeleteMapping("/{id}")
@@ -79,6 +88,31 @@ public class ArticleController {
             this.displayName = article.getUser().getProfile().getDisplayName();
             this.avatarUrl = article.getUser().getProfile().getAvatarUrl();
             this.content = article.getContent();
+            this.excerpt = article.getExcerpt();
+        }
+    }
+
+    @Data
+    static class ArticleCardDto {
+        private Long articleId;
+        private String title;
+        private String slug;
+        private String avatarUrl;
+        private String displayName;
+        private String username;
+        private LocalDateTime createdDate;
+        private String thumbnailUrl;
+        private String excerpt;
+
+        public ArticleCardDto(Article article) {
+            this.articleId = article.getId();
+            this.title = article.getTitle();
+            this.slug = article.getSlug();
+            this.avatarUrl = article.getUser().getProfile().getAvatarUrl();
+            this.displayName = article.getUser().getProfile().getDisplayName();
+            this.username = article.getUser().getUsername();
+            this.createdDate = article.getCreatedDate();
+            this.thumbnailUrl = article.getThumbnailUrl();
             this.excerpt = article.getExcerpt();
         }
     }
