@@ -1,4 +1,4 @@
-package com.example.myrealog.auth;
+package com.example.myrealog.common.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

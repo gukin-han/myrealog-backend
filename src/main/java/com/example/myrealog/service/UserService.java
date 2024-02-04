@@ -1,5 +1,6 @@
 package com.example.myrealog.service;
 
+import com.example.myrealog.common.exception.UserNotFoundException;
 import com.example.myrealog.model.Profile;
 import com.example.myrealog.model.User;
 import com.example.myrealog.repository.ProfileRepository;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,27 +30,32 @@ public class UserService {
     }
 
     @Transactional
-    public User findOneByEmail(String email) throws IllegalArgumentException {
+    public User findOneByEmail(String email) {
         return userRepository.findUserByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
-    public User findOneById(Long id) throws IllegalArgumentException {
+    public User findOneById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
     public User findUserAndProfileByEmail(String email) {
         return userRepository.findUserAndProfileByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+                .orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
     public User findUserAndProfileById(Long id) {
-        return userRepository.findUserAndProfileById(id)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        final Optional<User> findUser = userRepository.findUserAndProfileById(id);
+        return validateUserExistence(findUser);
+
+    }
+
+    private User validateUserExistence(Optional<User> optionalUser) {
+        return optionalUser.orElseThrow(UserNotFoundException::new);
     }
 
     private void validateDuplicateUser(User user) {

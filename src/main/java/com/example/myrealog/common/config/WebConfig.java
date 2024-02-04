@@ -1,9 +1,7 @@
-package com.example.myrealog.config;
+package com.example.myrealog.common.config;
 
-import com.example.myrealog.auth.AuthorizedUserArgumentResolver;
-import com.example.myrealog.auth.OAuthService;
-import com.example.myrealog.filter.LogFilter;
-import com.example.myrealog.repository.UserRepository;
+import com.example.myrealog.common.auth.AuthorizedUserArgumentResolver;
+import com.example.myrealog.common.filter.LogFilter;
 import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

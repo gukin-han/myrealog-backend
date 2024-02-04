@@ -1,16 +1,16 @@
 package com.example.myrealog.controller;
 
-import com.example.myrealog.auth.AuthToken;
-import com.example.myrealog.auth.Authorized;
-import com.example.myrealog.auth.OAuthService;
-import com.example.myrealog.auth.UserPrincipal;
-import com.example.myrealog.dto.request.SignUpFormRequest;
-import com.example.myrealog.dto.response.ResponseDto;
+import com.example.myrealog.common.auth.AuthToken;
+import com.example.myrealog.common.auth.Authorized;
+import com.example.myrealog.common.auth.OAuthService;
+import com.example.myrealog.common.auth.UserPrincipal;
+import com.example.myrealog.common.dto.request.SignUpFormRequest;
+import com.example.myrealog.common.dto.response.ResponseWrapper;
 import com.example.myrealog.model.Profile;
 import com.example.myrealog.model.User;
 import com.example.myrealog.service.UserService;
-import com.example.myrealog.utils.JwtUtils;
-import com.example.myrealog.utils.WebUtils;
+import com.example.myrealog.common.utils.JwtUtils;
+import com.example.myrealog.common.utils.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.Data;
@@ -34,7 +34,7 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<?> getMe(@Authorized UserPrincipal principal) {
         final User user = userService.findUserAndProfileById(principal.getUserId());
-        return ResponseEntity.ok(ResponseDto.of(new MeDto(user)));
+        return ResponseEntity.ok(ResponseWrapper.of(new MeDto(user)));
     }
 
     @PostMapping
@@ -54,7 +54,7 @@ public class UserController {
                 "/redirect",
                 responseCookie,
                 HttpStatus.CREATED,
-                ResponseDto.of(authToken)
+                ResponseWrapper.of(authToken)
         );
     }
 

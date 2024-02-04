@@ -1,4 +1,4 @@
-package com.example.myrealog.filter;
+package com.example.myrealog.common.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;

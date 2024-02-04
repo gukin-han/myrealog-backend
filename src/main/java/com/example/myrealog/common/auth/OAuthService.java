@@ -1,4 +1,4 @@
-package com.example.myrealog.auth;
+package com.example.myrealog.common.auth;
 
 import com.example.myrealog.model.User;
 import com.example.myrealog.repository.UserRepository;
@@ -15,11 +15,9 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.myrealog.auth.AuthToken.Type.ACCESS_TOKEN;
-import static com.example.myrealog.auth.OAuthProvider.GOOGLE;
-import static com.example.myrealog.utils.JwtUtils.generateJwt;
-import static com.example.myrealog.utils.WebUtils.buildRedirectResponse;
-import static com.example.myrealog.utils.WebUtils.generateCookie;
+import static com.example.myrealog.common.utils.JwtUtils.generateJwt;
+import static com.example.myrealog.common.utils.WebUtils.buildRedirectResponse;
+import static com.example.myrealog.common.utils.WebUtils.generateCookie;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +30,7 @@ public class OAuthService {
 
     public AuthToken signIn(User user) {
         final String accessToken = generateJwt(user.getId().toString());
-        return new AuthToken(ACCESS_TOKEN, accessToken);
+        return new AuthToken(AuthToken.Type.ACCESS_TOKEN, accessToken);
     }
 
     public ResponseEntity<?> signInOrGetSignUpToken(String code) {
@@ -78,15 +76,15 @@ public class OAuthService {
 
         final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
-        parameters.add("client_id", GOOGLE.getClientId());
-        parameters.add("client_secret", GOOGLE.getClientSecret());
+        parameters.add("client_id", OAuthProvider.GOOGLE.getClientId());
+        parameters.add("client_secret", OAuthProvider.GOOGLE.getClientSecret());
         parameters.add("code", code);
-        parameters.add("redirect_uri", GOOGLE.getRedirectUri());
-        parameters.add("grant_type", GOOGLE.getGrantType());
+        parameters.add("redirect_uri", OAuthProvider.GOOGLE.getRedirectUri());
+        parameters.add("grant_type", OAuthProvider.GOOGLE.getGrantType());
 
         final HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(parameters, headers);
 
-        return restTemplate.postForEntity(GOOGLE.getTokenUri(), request, OAuthTokenDto.class)
+        return restTemplate.postForEntity(OAuthProvider.GOOGLE.getTokenUri(), request, OAuthTokenDto.class)
                 .getBody();
     }
 
@@ -98,7 +96,7 @@ public class OAuthService {
 
         final HttpEntity<?> request = new HttpEntity<>(headers);
 
-        return restTemplate.exchange(GOOGLE.getResourceUri(), HttpMethod.GET, request, UserAttributesDto.class)
+        return restTemplate.exchange(OAuthProvider.GOOGLE.getResourceUri(), HttpMethod.GET, request, UserAttributesDto.class)
                 .getBody();
     }
 

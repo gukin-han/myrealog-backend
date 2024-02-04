@@ -1,4 +1,4 @@
-package com.example.myrealog.utils;
+package com.example.myrealog.common.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;

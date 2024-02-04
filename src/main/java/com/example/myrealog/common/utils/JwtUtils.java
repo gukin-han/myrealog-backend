@@ -1,4 +1,4 @@
-package com.example.myrealog.utils;
+package com.example.myrealog.common.utils;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

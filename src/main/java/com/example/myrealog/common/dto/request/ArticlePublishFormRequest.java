@@ -1,4 +1,4 @@
-package com.example.myrealog.dto.request;
+package com.example.myrealog.common.dto.request;
 
 import lombok.Data;
 

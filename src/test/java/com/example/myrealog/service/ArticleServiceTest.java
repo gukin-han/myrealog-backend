@@ -1,9 +1,8 @@
 package com.example.myrealog.service;
 
-import com.example.myrealog.exception.NotEnoughDaysForPublishingException;
+import com.example.myrealog.common.exception.NotEnoughDaysForPublishingException;
 import com.example.myrealog.model.Article;
 import com.example.myrealog.model.User;
-import com.example.myrealog.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

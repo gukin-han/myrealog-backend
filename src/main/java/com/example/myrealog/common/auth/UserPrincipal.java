@@ -1,4 +1,4 @@
-package com.example.myrealog.auth;
+package com.example.myrealog.common.auth;
 
 import lombok.Data;
 
