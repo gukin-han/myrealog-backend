@@ -82,7 +82,7 @@ public class ArticleController {
         private String excerpt;
 
         public ArticleViewDto(Article article) {
-            this.articleId = getArticleId();
+            this.articleId = article.getId();
             this.title = article.getTitle();
             this.createdDate = article.getCreatedDate();
             this.displayName = article.getUser().getProfile().getDisplayName();
