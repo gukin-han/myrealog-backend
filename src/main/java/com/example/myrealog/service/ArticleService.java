@@ -60,12 +60,14 @@ public class ArticleService {
     }
 
     @Transactional
-    public void updateArticle(Long articleId, Long userId, ArticlePublishFormRequest form) {
+    public Article updateArticle(Long articleId, Long userId, ArticlePublishFormRequest form) {
         final Article findArticle = findUpdatableArticleByArticleIdAndUserId(articleId, userId);
 
         findArticle.updateTitle(form.getTitle());
         findArticle.updateContent(form.getContent());
         findArticle.updateExcerpt(form.getExcerpt());
+
+        return findArticle;
     }
 
     @Transactional

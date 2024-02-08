@@ -51,6 +51,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             FROM Article article
             JOIN FETCH article.user user
             JOIN FETCH user.profile profile
+            ORDER BY article.id DESC
            """)
     List<Article> findAllWithUserProfile();
 

@@ -67,8 +67,9 @@ public class ArticleController {
                                            @PathVariable("id") Long articleId,
                                            @RequestBody @Valid ArticlePublishFormRequest form) {
 
-        articleService.updateArticle(articleId,principal.getUserId(), form);
-        return ResponseEntity.ok().build();
+        final Article updatedArticle = articleService.updateArticle(articleId, principal.getUserId(), form);
+        final String redirectUri = "/" + updatedArticle.getUser().getUsername() + "/" + updatedArticle.getSlug();
+        return ResponseEntity.created(URI.create(redirectUri)).build();
     }
 
     @Data
