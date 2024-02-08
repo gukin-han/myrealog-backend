@@ -23,6 +23,15 @@
 | GET    | `/api/v1/users/me`   | Get user profile | AccessToken Requried | [JSON](#apiv1usersme) |
 <br />
 
+### Category
+| Method  | End Point                   | Description                | Auth | Details |
+|---------|-----------------------------|----------------------------|------|---------|
+| POST    | `/api/v1/categories/new`    | Create new category        |      |         |
+| GET     | `/api/v1/categories`        | Get All categories         |      |         |
+| PATCH   | `/api/v1/categories/{id}`   | Update given {id} category |      |         |
+| DELETE  | `/api/v1/cateogries/{id}`   | Delete given {id} category |      |         |
+
+
 ## API Details
 <br />
 
