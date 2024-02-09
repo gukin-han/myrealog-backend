@@ -24,10 +24,10 @@ public class WebUtils {
     }
 
     public static ResponseEntity<?> buildRedirectResponse(String redirectUrl, ResponseCookie cookie, HttpStatus status, Object body) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(URI.create(redirectUrl));
-        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.status(status).headers(headers).body(body);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create(redirectUrl));
+//        headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.status(HttpStatus.OK).header("Location", redirectUrl).body(body);
     }
 
     public static ResponseCookie generateCookie(String name, String value) {

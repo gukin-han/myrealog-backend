@@ -1,5 +1,7 @@
 package com.example.myrealog.common.auth;
 
+import com.example.myrealog.common.dto.response.AuthTokenResponse;
+import com.example.myrealog.common.dto.response.ResponseWrapper;
 import com.example.myrealog.model.User;
 import com.example.myrealog.repository.UserRepository;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,6 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.myrealog.common.dto.response.AuthTokenResponse.Type.ACCESS_TOKEN;
+import static com.example.myrealog.common.dto.response.AuthTokenResponse.Type.SIGNUP_TOKEN;
 import static com.example.myrealog.common.utils.JwtUtils.generateJwt;
 import static com.example.myrealog.common.utils.WebUtils.buildRedirectResponse;
 import static com.example.myrealog.common.utils.WebUtils.generateCookie;
@@ -26,11 +30,9 @@ public class OAuthService {
 
     private final UserRepository userRepository;
 
-    private static final String REDIRECT_URL_BASE = "http://localhost:3000";
-
-    public AuthToken signIn(User user) {
+    public AuthTokenResponse signIn(User user) {
         final String accessToken = generateJwt(user.getId().toString());
-        return new AuthToken(AuthToken.Type.ACCESS_TOKEN, accessToken);
+        return AuthTokenResponse.of(ACCESS_TOKEN, accessToken);
     }
 
     public ResponseEntity<?> signInOrGetSignUpToken(String code) {
@@ -48,18 +50,25 @@ public class OAuthService {
                                                         String userEmail,
                                                         HttpStatus status) {
 
-        String redirectUrl = REDIRECT_URL_BASE;
+        String redirectUrl = "";
         ResponseCookie cookie;
+        AuthTokenResponse authTokenResponse;
 
         if (optionalUser.isEmpty()) {
             redirectUrl += "/signup?email=" + userEmail;
-            cookie = generateCookie("signupToken", generateJwt(userEmail));
+            final String jwt = generateJwt(userEmail);
+            cookie = generateCookie("signupToken", jwt);
+            authTokenResponse = AuthTokenResponse.of(SIGNUP_TOKEN, jwt);
         } else {
             redirectUrl += "/redirect";
-            cookie = generateCookie("accessToken", generateJwt(optionalUser.get().getId().toString()));
+            final String jwt = generateJwt(optionalUser.get().getId().toString());
+            cookie = generateCookie("accessToken", jwt);
+            authTokenResponse = AuthTokenResponse.of(ACCESS_TOKEN, jwt);
         }
 
-        return buildRedirectResponse(redirectUrl, cookie, status);
+        final ResponseWrapper<AuthTokenResponse> response = ResponseWrapper.of(authTokenResponse);
+
+        return buildRedirectResponse(redirectUrl, cookie, status, response);
     }
 
     public String getUserInfo(final String code) {

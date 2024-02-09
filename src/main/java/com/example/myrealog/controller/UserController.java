@@ -1,6 +1,6 @@
 package com.example.myrealog.controller;
 
-import com.example.myrealog.common.auth.AuthToken;
+import com.example.myrealog.common.dto.response.AuthTokenResponse;
 import com.example.myrealog.common.auth.Authorized;
 import com.example.myrealog.common.auth.OAuthService;
 import com.example.myrealog.common.auth.UserPrincipal;
@@ -47,7 +47,7 @@ public class UserController {
                 new User(email, signUpForm.getUsername()),
                 new Profile(signUpForm.getDisplayName(), signUpForm.getBio()));
 
-        final AuthToken authToken = oAuthService.signIn(signedUpUser);
+        final AuthTokenResponse authToken = oAuthService.signIn(signedUpUser);
         final ResponseCookie responseCookie = WebUtils.generateCookie(authToken.getType().name(), authToken.getValue());
 
         return WebUtils.buildRedirectResponse(
