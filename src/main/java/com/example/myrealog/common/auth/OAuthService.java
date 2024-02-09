@@ -26,7 +26,7 @@ public class OAuthService {
 
     private final UserRepository userRepository;
 
-    private static final String REDIRECT_URL_BASE = "http://localhost:3000";
+    private static final String REDIRECT_URL_BASE = "https://myrealog.com";
 
     public AuthToken signIn(User user) {
         final String accessToken = generateJwt(user.getId().toString());
