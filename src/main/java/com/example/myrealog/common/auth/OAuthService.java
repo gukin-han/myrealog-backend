@@ -42,10 +42,6 @@ public class OAuthService {
         return signInOrGetSignUpToken(findUser, userEmail, HttpStatus.FOUND);
     }
 
-    public ResponseEntity<?> signInOrGetSignUpToken(User signedUpUser) {
-        return signInOrGetSignUpToken(Optional.of(signedUpUser), null, HttpStatus.CREATED);
-    }
-
     private ResponseEntity<?> signInOrGetSignUpToken(Optional<User> optionalUser,
                                                         String userEmail,
                                                         HttpStatus status) {

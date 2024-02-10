@@ -30,7 +30,7 @@ class UserServiceTest {
         final String email ="test@test.com";
 
         //when
-        final User signupUser = userService.signup(userSignupRequest, email);
+        final User signupUser = userService.signUp(userSignupRequest, email);
 
         //then
         assertThat(signupUser.getId()).isNotNull();
@@ -50,13 +50,13 @@ class UserServiceTest {
         //given
         final String duplicateEmail ="test@test.com";
         final UserSignupRequest userSignupRequest = createUserSignupRequest("username1", "displayName1", "bio1");
-        userService.signup(userSignupRequest, duplicateEmail);
+        userService.signUp(userSignupRequest, duplicateEmail);
 
         //when
         final UserSignupRequest userSignupRequest2 = createUserSignupRequest("username2", "displayName2", "bio2");
 
         //then
-        assertThatThrownBy(() -> userService.signup(userSignupRequest2, duplicateEmail))
+        assertThatThrownBy(() -> userService.signUp(userSignupRequest2, duplicateEmail))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 가입된 이메일입니다.");
     }
@@ -69,14 +69,14 @@ class UserServiceTest {
 
         final UserSignupRequest userSignupRequest = createUserSignupRequest(duplicateUsername, "displayName1", "bio1");
         final String email1 = "test1@test.com";
-        userService.signup(userSignupRequest, email1);
+        userService.signUp(userSignupRequest, email1);
 
         //when
         final UserSignupRequest userSignupRequest2 = createUserSignupRequest(duplicateUsername, "displayName2", "bio2");
         final String email2 = "test2@test.com";
 
         //then
-        assertThatThrownBy(() -> userService.signup(userSignupRequest2, email2))
+        assertThatThrownBy(() -> userService.signUp(userSignupRequest2, email2))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("중복된 유저이름입니다. 다시 입력해주세요.");
     }
@@ -93,8 +93,8 @@ class UserServiceTest {
         final UserSignupRequest userSignupRequest2 = createUserSignupRequest(username2, "displayName1", "bio1");
         final String email2 = "test2@test.com";
 
-        final User signupUser1 = userService.signup(userSignupRequest, email1);
-        final User signupUser2 = userService.signup(userSignupRequest2, email2);
+        final User signupUser1 = userService.signUp(userSignupRequest, email1);
+        final User signupUser2 = userService.signUp(userSignupRequest2, email2);
 
         //when
         final User findUser = userService.findById(signupUser1.getId());
@@ -111,7 +111,7 @@ class UserServiceTest {
         final String username1 = "username1";
         final UserSignupRequest userSignupRequest = createUserSignupRequest(username1, "displayName1", "bio1");
         final String email1 = "test1@test.com";
-        final User signupUser1 = userService.signup(userSignupRequest, email1);
+        final User signupUser1 = userService.signUp(userSignupRequest, email1);
 
         //when
         //then

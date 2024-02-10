@@ -3,6 +3,7 @@ package com.example.myrealog.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,14 +35,15 @@ public class Profile extends BaseTimeEntity{
     private String avatarUrl;
     private String bio;
 
-    public Profile(String displayName, String bio) {
-        this(displayName, bio, "");
-    }
-
-    public Profile(String displayName, String bio, String avatarUrl) {
+    @Builder
+    private Profile(String displayName, String bio, String avatarUrl) {
         this.displayName = displayName;
         this.bio = bio;
         this.avatarUrl = avatarUrl;
+    }
+
+    public static Profile of(String displayName, String bio) {
+        return new Profile(displayName, bio, "");
     }
 
     public void updateUser(User user) {

@@ -1,5 +1,6 @@
 package com.example.myrealog.controller;
 
+import com.example.myrealog.common.dto.request.UserSignupRequest;
 import com.example.myrealog.common.dto.response.AuthTokenResponse;
 import com.example.myrealog.common.auth.Authorized;
 import com.example.myrealog.common.auth.OAuthService;
@@ -38,14 +39,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> signUp(@RequestBody @Valid SignUpFormRequest signUpForm,
-                                    HttpServletRequest request) {
-        final String signupToken = WebUtils.extractTokenFromRequest(request);
+    public ResponseEntity<?> signUp(@RequestBody @Valid UserSignupRequest request,
+                                    HttpServletRequest httpServletRequest) {
+
+        final String signupToken = WebUtils.extractTokenFromRequest(httpServletRequest);
         final String email = JwtUtils.validateJwtAndGetSubject(signupToken); // can throw error
 
-        final User signedUpUser = userService.signUp(
-                new User(email, signUpForm.getUsername()),
-                new Profile(signUpForm.getDisplayName(), signUpForm.getBio()));
+        final User signedUpUser = userService.signUp(request, email);
 
         final AuthTokenResponse authToken = oAuthService.signIn(signedUpUser);
         final ResponseCookie responseCookie = WebUtils.generateCookie(authToken.getType().name(), authToken.getValue());

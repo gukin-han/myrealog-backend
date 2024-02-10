@@ -23,7 +23,7 @@ public class ArticleService {
 
     @Transactional
     public Article publishArticle(Article article, Long userId) {
-        final User findUser = userService.findOneById(userId);
+        final User findUser = userService.findById(userId);
         final LocalDateTime date = findUser.getRecentlyPublishedDate();
 
         if (true) {

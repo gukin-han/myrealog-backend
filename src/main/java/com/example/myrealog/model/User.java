@@ -3,6 +3,7 @@ package com.example.myrealog.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +26,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(fetch = LAZY, cascade = {REMOVE}, orphanRemoval = true)
+    @OneToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
@@ -52,13 +53,19 @@ public class User extends BaseTimeEntity {
 
     private LocalDateTime recentlyPublishedDate;
 
-    public void updateRecentlyPublishedDate(LocalDateTime date) {
-        recentlyPublishedDate = date;
+    @Builder
+    private User(Profile profile, String username, String email) {
+        this.profile = profile;
+        this.username = username;
+        this.email = email;
     }
 
-    public User(String email, String username) {
-        this.email = email;
-        this.username = username;
+    public static User create(String email, String username, String displayName, String bio) {
+        return new User(Profile.of(displayName, bio), username, email);
+    }
+
+    public void updateRecentlyPublishedDate(LocalDateTime date) {
+        recentlyPublishedDate = date;
     }
 
     public void updateProfile(Profile profile) {

@@ -1,9 +1,8 @@
 package com.example.myrealog.service;
 
+import com.example.myrealog.common.dto.request.UserSignupRequest;
 import com.example.myrealog.common.exception.UserNotFoundException;
-import com.example.myrealog.model.Profile;
 import com.example.myrealog.model.User;
-import com.example.myrealog.repository.ProfileRepository;
 import com.example.myrealog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,32 +17,18 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final ProfileRepository profileRepository;
 
     @Transactional
-    public User signUp(User user, Profile profile) {
+    public User signUp(UserSignupRequest request, String email) {
+        validateDuplicateUserByEmailAndUsername(email, request.getUsername());
 
-        validateDuplicateUser(user);
-        final Profile savedProfile = profileRepository.save(profile);
-        user.updateProfile(savedProfile);
+        final User user = User.create(email, request.getUsername(), request.getDisplayName(), request.getBio());
         return userRepository.save(user);
     }
 
     @Transactional
-    public User findOneByEmail(String email) {
-        return userRepository.findUserByEmail(email)
-                .orElseThrow(UserNotFoundException::new);
-    }
-
-    @Transactional
-    public User findOneById(Long id) {
+    public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
-    }
-
-    @Transactional
-    public User findUserAndProfileByEmail(String email) {
-        return userRepository.findUserAndProfileByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
     }
 
@@ -58,9 +43,14 @@ public class UserService {
         return optionalUser.orElseThrow(UserNotFoundException::new);
     }
 
-    private void validateDuplicateUser(User user) {
-        if (userRepository.existsByEmailAndUsername(user.getEmail(), user.getUsername())) {
-            throw new IllegalArgumentException("중복된 유저이름 혹은 이메일입니다.");
+    private void validateDuplicateUserByEmailAndUsername(String email, String username) {
+
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+
+        if (userRepository.existsByUsername(username)) {
+            throw new IllegalArgumentException("중복된 유저이름입니다. 다시 입력해주세요.");
         }
     }
 }
