@@ -2,6 +2,7 @@ package com.example.myrealog.common.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @AllArgsConstructor
@@ -9,7 +10,7 @@ public enum OAuthProvider {
     GOOGLE("google",
             "https://accounts.google.com/o/oauth2/v2/auth",
             "https://oauth2.googleapis.com/token",
-            "1093181076891-hb8imppppmtd0gj52hqnu3ed9dt3j5ka.apps.googleusercontent.com",
+            System.getenv("CLIENT_ID_GOOGLE"),
             System.getenv("SECRETE_KEY_GOOGLE"),
 //            "https://myrealog.com/api/v1/social/callback",
             "http://localhost:3000/api/v1/social/callback",

@@ -10,8 +10,8 @@ import java.util.Date;
 public class JwtUtils {
 
     private static final long EXPIRATION_TIME = 86400000;
-    private static final String SECRET_KEY = "a0daASD0as0daLKOIWN123Liqpvm211340vxlsewrLiqpvm21134040vxlsewrLiqpvm2113404040vxlsewrLiqpvm2113404040vxlsewrLiqpvm2113404040vxlsewrLiqpvm2113404040vxlsewrLi"; // 비밀 키 설정
-    private static final SecretKey SECRET = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    private static final String JWT_SECRET_KEY = System.getenv("JWT_SECRET_KEY"); // 비밀 키 설정
+    private static final SecretKey SECRET = Keys.hmacShaKeyFor(JWT_SECRET_KEY.getBytes(StandardCharsets.UTF_8));
 
     public static String generateJwt(String subject) {
         return Jwts
