@@ -21,7 +21,7 @@ spring:
         jdbc:
           time_zone: UTC
         format_sql: true # for test
-    show_sql: true # for test
+#    show_sql: true # for test
   h2:
     console:
       enabled: true
