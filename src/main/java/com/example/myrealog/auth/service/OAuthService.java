@@ -1,6 +1,7 @@
-package com.example.myrealog.v1.common.auth;
+package com.example.myrealog.auth.service;
 
-import com.example.myrealog.v1.common.dto.response.AuthTokenResponse;
+import com.example.myrealog.auth.OAuthProvider;
+import com.example.myrealog.auth.service.response.AuthResponse;
 import com.example.myrealog.v1.common.dto.response.ResponseWrapper;
 import com.example.myrealog.domain.user.User;
 import com.example.myrealog.domain.user.UserRepository;
@@ -28,9 +29,9 @@ public class OAuthService {
 
     private final UserRepository userRepository;
 
-    public AuthTokenResponse signIn(User user) {
+    public AuthResponse signIn(User user) {
         final String accessToken = JwtUtils.generateJwt(user.getId().toString());
-        return AuthTokenResponse.of(AuthTokenResponse.Type.ACCESS_TOKEN, accessToken);
+        return AuthResponse.of(AuthResponse.Type.ACCESS_TOKEN, accessToken);
     }
 
     public ResponseEntity<?> signInOrGetSignUpToken(String code) {
@@ -46,21 +47,21 @@ public class OAuthService {
 
         String redirectUrl = "";
         ResponseCookie cookie;
-        AuthTokenResponse authTokenResponse;
+        AuthResponse authResponse;
 
         if (optionalUser.isEmpty()) {
             redirectUrl += "/signup?email=" + userEmail;
             final String jwt = JwtUtils.generateJwt(userEmail);
             cookie = WebUtils.generateCookie("signupToken", jwt);
-            authTokenResponse = AuthTokenResponse.of(AuthTokenResponse.Type.SIGNUP_TOKEN, jwt);
+            authResponse = AuthResponse.of(AuthResponse.Type.SIGNUP_TOKEN, jwt);
         } else {
             redirectUrl += "/redirect";
             final String jwt = JwtUtils.generateJwt(optionalUser.get().getId().toString());
             cookie = WebUtils.generateCookie("accessToken", jwt);
-            authTokenResponse = AuthTokenResponse.of(AuthTokenResponse.Type.ACCESS_TOKEN, jwt);
+            authResponse = AuthResponse.of(AuthResponse.Type.ACCESS_TOKEN, jwt);
         }
 
-        final ResponseWrapper<AuthTokenResponse> response = ResponseWrapper.of(authTokenResponse);
+        final ResponseWrapper<AuthResponse> response = ResponseWrapper.of(authResponse);
 
         return WebUtils.buildRedirectResponse(redirectUrl, cookie, status, response);
     }

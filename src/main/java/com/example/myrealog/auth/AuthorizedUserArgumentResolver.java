@@ -1,4 +1,4 @@
-package com.example.myrealog.v1.common.auth;
+package com.example.myrealog.auth;
 
 import com.example.myrealog.v1.common.exception.InvalidTokenException;
 import com.example.myrealog.v1.common.utils.JwtUtils;
@@ -36,14 +36,18 @@ public class AuthorizedUserArgumentResolver implements HandlerMethodArgumentReso
         final String uuid = (String) request.getAttribute("uuid");
         final String requestURI = request.getRequestURI();
 
+        String subject = "";
         try {
             log.info("AUTHORIZATION START [{}][{}]", uuid, requestURI);
-            final String accessToken = WebUtils.extractTokenFromRequest(request);
-            final String userId = JwtUtils.validateJwtAndGetSubject(accessToken);
-            final UserPrincipal userPrincipal = new UserPrincipal(Long.parseLong(userId));
+            final String token = WebUtils.extractTokenFromRequest(request);
+            subject = JwtUtils.validateJwtAndGetSubject(token);
+            final UserPrincipal userPrincipal = new UserPrincipal(Long.parseLong(subject));
             log.info("AUTHORIZATION SUCCESS [{}][{}]", uuid, requestURI);
             return userPrincipal;
-
+        } catch (NumberFormatException err) {
+            final UserPrincipal userPrincipal = new UserPrincipal(subject);
+            log.info("AUTHORIZATION SUCCESS [{}][{}]", uuid, requestURI);
+            return userPrincipal;
         } catch (JwtException err) {
             log.error("AUTHORIZATION FAIL [{}][{}]", uuid, requestURI);
             throw new InvalidTokenException();
