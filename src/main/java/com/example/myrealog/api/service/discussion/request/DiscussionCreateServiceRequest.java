@@ -3,7 +3,7 @@ package com.example.myrealog.api.service.discussion.request;
 import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.discussion.Discussion;
 import com.example.myrealog.domain.discussion.Discussion.DiscussionBuilder;
-import com.example.myrealog.v1.model.User;
+import com.example.myrealog.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

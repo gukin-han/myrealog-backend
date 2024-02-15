@@ -1,5 +1,7 @@
 package com.example.myrealog.v1.model;
 
+import com.example.myrealog.domain.BaseTimeEntity;
+import com.example.myrealog.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,7 +18,7 @@ import static jakarta.persistence.CascadeType.*;
 @Getter
 @Table(name = "profiles")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Profile extends BaseTimeEntity{
+public class Profile extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

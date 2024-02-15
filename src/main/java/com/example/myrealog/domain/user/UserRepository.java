@@ -1,6 +1,5 @@
-package com.example.myrealog.v1.repository;
+package com.example.myrealog.domain.user;
 
-import com.example.myrealog.v1.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -2,7 +2,7 @@ package com.example.myrealog.api.service.discussion.response;
 
 import com.example.myrealog.api.service.article.response.ArticleResponse;
 import com.example.myrealog.domain.discussion.Discussion;
-import com.example.myrealog.v1.model.User;
+import com.example.myrealog.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 

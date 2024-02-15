@@ -1,10 +1,7 @@
 package com.example.myrealog.domain.article;
 
-import com.example.myrealog.domain.article.Article;
-import com.example.myrealog.domain.article.ArticleRepository;
-import com.example.myrealog.domain.article.ArticleStatus;
-import com.example.myrealog.v1.model.User;
-import com.example.myrealog.v1.repository.UserRepository;
+import com.example.myrealog.domain.user.User;
+import com.example.myrealog.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

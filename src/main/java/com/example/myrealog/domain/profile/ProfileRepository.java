@@ -1,4 +1,4 @@
-package com.example.myrealog.v1.repository;
+package com.example.myrealog.domain.profile;
 
 import com.example.myrealog.v1.model.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -2,8 +2,8 @@ package com.example.myrealog.v1.common.auth;
 
 import com.example.myrealog.v1.common.dto.response.AuthTokenResponse;
 import com.example.myrealog.v1.common.dto.response.ResponseWrapper;
-import com.example.myrealog.v1.model.User;
-import com.example.myrealog.v1.repository.UserRepository;
+import com.example.myrealog.domain.user.User;
+import com.example.myrealog.domain.user.UserRepository;
 import com.example.myrealog.v1.common.utils.JwtUtils;
 import com.example.myrealog.v1.common.utils.WebUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -2,9 +2,8 @@ package com.example.myrealog.api.service.user;
 
 import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
 import com.example.myrealog.v1.common.exception.UserNotFoundException;
-import com.example.myrealog.v1.model.User;
-import com.example.myrealog.v1.repository.UserRepository;
-import com.example.myrealog.v1.service.UserService;
+import com.example.myrealog.domain.user.User;
+import com.example.myrealog.domain.user.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

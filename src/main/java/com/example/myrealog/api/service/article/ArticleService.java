@@ -6,8 +6,8 @@ import com.example.myrealog.domain.article.ArticleRepository;
 import com.example.myrealog.domain.article.ArticleStatus;
 import com.example.myrealog.v1.common.dto.request.ArticlePublishFormRequest;
 import com.example.myrealog.v1.common.exception.NotEnoughDaysForPublishingException;
-import com.example.myrealog.v1.service.UserService;
-import com.example.myrealog.v1.model.User;
+import com.example.myrealog.api.service.user.UserService;
+import com.example.myrealog.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service

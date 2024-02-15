@@ -1,6 +1,8 @@
 package com.example.myrealog.v1.model;
 
+import com.example.myrealog.domain.BaseTimeEntity;
 import com.example.myrealog.domain.article.Article;
+import com.example.myrealog.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 

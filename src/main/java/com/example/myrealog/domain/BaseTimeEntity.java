@@ -1,4 +1,4 @@
-package com.example.myrealog.v1.model;
+package com.example.myrealog.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

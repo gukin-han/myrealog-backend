@@ -1,11 +1,10 @@
 package com.example.myrealog.domain.discussion;
 
 import com.example.myrealog.domain.article.Article;
-import com.example.myrealog.v1.model.BaseTimeEntity;
+import com.example.myrealog.domain.BaseTimeEntity;
 import com.example.myrealog.v1.model.DiscussionReaction;
-import com.example.myrealog.v1.model.User;
+import com.example.myrealog.domain.user.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,9 +1,9 @@
-package com.example.myrealog.v1.service;
+package com.example.myrealog.api.service.user;
 
 import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
 import com.example.myrealog.v1.common.exception.UserNotFoundException;
-import com.example.myrealog.v1.model.User;
-import com.example.myrealog.v1.repository.UserRepository;
+import com.example.myrealog.domain.user.User;
+import com.example.myrealog.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

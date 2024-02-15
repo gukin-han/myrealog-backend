@@ -1,4 +1,4 @@
-package com.example.myrealog.v1.controller;
+package com.example.myrealog.api.controller.user;
 
 import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
 import com.example.myrealog.v1.common.dto.response.AuthTokenResponse;
@@ -6,8 +6,8 @@ import com.example.myrealog.v1.common.auth.Authorized;
 import com.example.myrealog.v1.common.auth.OAuthService;
 import com.example.myrealog.v1.common.auth.UserPrincipal;
 import com.example.myrealog.v1.common.dto.response.ResponseWrapper;
-import com.example.myrealog.v1.model.User;
-import com.example.myrealog.v1.service.UserService;
+import com.example.myrealog.domain.user.User;
+import com.example.myrealog.api.service.user.UserService;
 import com.example.myrealog.v1.common.utils.JwtUtils;
 import com.example.myrealog.v1.common.utils.WebUtils;
 import jakarta.servlet.http.HttpServletRequest;

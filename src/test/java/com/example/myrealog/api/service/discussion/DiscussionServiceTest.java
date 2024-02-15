@@ -4,10 +4,8 @@ import com.example.myrealog.api.service.discussion.request.DiscussionCreateServi
 import com.example.myrealog.api.service.discussion.response.DiscussionResponse;
 import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.article.ArticleRepository;
-import com.example.myrealog.v1.model.User;
-import com.example.myrealog.v1.repository.UserRepository;
-import com.example.myrealog.v1.service.UserService;
-import org.assertj.core.api.Assertions;
+import com.example.myrealog.domain.user.User;
+import com.example.myrealog.domain.user.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
