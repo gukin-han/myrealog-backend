@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service
@@ -101,5 +102,10 @@ public class ArticleService {
         final Article draft = Article.createDraft(user);
         final Article savedDraft = articleRepository.save(draft);
         return ArticleResponse.of(savedDraft);
+    }
+
+    public Article findById(Long articleId) {
+        return articleRepository.findById(articleId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아티클입니다."));
     }
 }

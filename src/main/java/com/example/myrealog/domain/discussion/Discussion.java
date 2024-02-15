@@ -1,16 +1,24 @@
-package com.example.myrealog.v1.model;
+package com.example.myrealog.domain.discussion;
 
 import com.example.myrealog.domain.article.Article;
+import com.example.myrealog.v1.model.BaseTimeEntity;
+import com.example.myrealog.v1.model.DiscussionReaction;
+import com.example.myrealog.v1.model.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.REMOVE;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "discussions")
 public class Discussion extends BaseTimeEntity {
 
@@ -40,4 +48,16 @@ public class Discussion extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "discussion", cascade = {REMOVE}, orphanRemoval = true)
     private List<DiscussionReaction> discussionReactions = new ArrayList<>();
+
+    @Builder
+    private Discussion(Long id, int depth, String content, Discussion parent, List<Discussion> children, Article article, User user, List<DiscussionReaction> discussionReactions) {
+        this.id = id;
+        this.depth = depth;
+        this.content = content;
+        this.parent = parent;
+        this.children = children;
+        this.article = article;
+        this.user = user;
+        this.discussionReactions = discussionReactions;
+    }
 }
