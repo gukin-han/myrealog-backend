@@ -1,4 +1,4 @@
-package com.example.myrealog.v2.api;
+package com.example.myrealog.api;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

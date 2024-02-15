@@ -1,4 +1,4 @@
-package com.example.myrealog.v2.domain.article;
+package com.example.myrealog.domain.article;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.example.myrealog.v2.domain.article;
+package com.example.myrealog.domain.article;
 
 import com.example.myrealog.v1.model.*;
 import jakarta.persistence.*;
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.example.myrealog.v2.domain.article.ArticleStatus.DRAFT;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 @Entity
@@ -91,7 +90,7 @@ public class Article extends BaseTimeEntity {
                 .title("")
                 .content("")
                 .excerpt("")
-                .articleStatus(DRAFT)
+                .articleStatus(ArticleStatus.DRAFT)
                 .build();
     }
 

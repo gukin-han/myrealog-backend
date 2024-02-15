@@ -1,11 +1,12 @@
-package com.example.myrealog.v2.api.service.article;
+package com.example.myrealog.api.service.article;
 
+import com.example.myrealog.api.service.article.ArticleService;
 import com.example.myrealog.v1.model.User;
 import com.example.myrealog.v1.repository.UserRepository;
-import com.example.myrealog.v2.api.service.article.response.ArticleResponse;
-import com.example.myrealog.v2.domain.article.Article;
-import com.example.myrealog.v2.domain.article.ArticleRepository;
-import com.example.myrealog.v2.domain.article.ArticleStatus;
+import com.example.myrealog.api.service.article.response.ArticleResponse;
+import com.example.myrealog.domain.article.Article;
+import com.example.myrealog.domain.article.ArticleRepository;
+import com.example.myrealog.domain.article.ArticleStatus;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static com.example.myrealog.v2.domain.article.ArticleStatus.DRAFT;
+import static com.example.myrealog.domain.article.ArticleStatus.DRAFT;
 
 @SpringBootTest
 class ArticleServiceTest {

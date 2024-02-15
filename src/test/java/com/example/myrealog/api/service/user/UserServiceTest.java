@@ -1,4 +1,4 @@
-package com.example.myrealog.v2.api.service.user;
+package com.example.myrealog.api.service.user;
 
 import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
 import com.example.myrealog.v1.common.exception.UserNotFoundException;

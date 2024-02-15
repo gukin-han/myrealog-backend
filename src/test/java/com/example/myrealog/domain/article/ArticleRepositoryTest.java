@@ -1,9 +1,10 @@
-package com.example.myrealog.v2.domain.article;
+package com.example.myrealog.domain.article;
 
-import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
+import com.example.myrealog.domain.article.Article;
+import com.example.myrealog.domain.article.ArticleRepository;
+import com.example.myrealog.domain.article.ArticleStatus;
 import com.example.myrealog.v1.model.User;
 import com.example.myrealog.v1.repository.UserRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static com.example.myrealog.v2.domain.article.ArticleStatus.*;
+import static com.example.myrealog.domain.article.ArticleStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest

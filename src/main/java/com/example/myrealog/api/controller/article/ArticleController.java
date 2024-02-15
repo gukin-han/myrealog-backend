@@ -1,13 +1,14 @@
-package com.example.myrealog.v2.api.controller.article;
+package com.example.myrealog.api.controller.article;
 
+import com.example.myrealog.api.ApiResponse;
+import com.example.myrealog.api.service.article.response.ArticleResponse;
+import com.example.myrealog.domain.article.Article;
+import com.example.myrealog.domain.article.ArticleStatus;
 import com.example.myrealog.v1.common.auth.Authorized;
 import com.example.myrealog.v1.common.auth.UserPrincipal;
 import com.example.myrealog.v1.common.dto.request.ArticlePublishFormRequest;
 import com.example.myrealog.v1.common.dto.response.ResponseWrapper;
-import com.example.myrealog.v2.api.ApiResponse;
-import com.example.myrealog.v2.api.service.article.response.ArticleResponse;
-import com.example.myrealog.v2.domain.article.Article;
-import com.example.myrealog.v2.api.service.article.ArticleService;
+import com.example.myrealog.api.service.article.ArticleService;
 import jakarta.validation.Valid;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static com.example.myrealog.v2.domain.article.ArticleStatus.PUBLIC;
 
 @Slf4j
 @RestController
@@ -32,7 +31,7 @@ public class ArticleController {
     public ResponseEntity<Void> publishArticle(@Authorized UserPrincipal principal,
                                                @RequestBody @Valid ArticlePublishFormRequest form) {
 
-            final Article article = new Article(form.getTitle(), form.getContent(), form.getExcerpt(), PUBLIC);
+            final Article article = new Article(form.getTitle(), form.getContent(), form.getExcerpt(), ArticleStatus.PUBLIC);
             final Article publishedArticle = articleService.publishArticle(article, principal.getUserId());
 
             final String redirectUri = "/" + publishedArticle.getUser().getUsername() + "/" + publishedArticle.getSlug();

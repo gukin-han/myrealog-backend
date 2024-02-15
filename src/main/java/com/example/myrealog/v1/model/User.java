@@ -1,6 +1,6 @@
 package com.example.myrealog.v1.model;
 
-import com.example.myrealog.v2.domain.article.Article;
+import com.example.myrealog.domain.article.Article;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;

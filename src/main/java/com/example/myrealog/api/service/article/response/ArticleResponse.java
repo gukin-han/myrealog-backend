@@ -1,7 +1,7 @@
-package com.example.myrealog.v2.api.service.article.response;
+package com.example.myrealog.api.service.article.response;
 
-import com.example.myrealog.v2.domain.article.Article;
-import com.example.myrealog.v2.domain.article.ArticleStatus;
+import com.example.myrealog.domain.article.Article;
+import com.example.myrealog.domain.article.ArticleStatus;
 import lombok.Builder;
 import lombok.Getter;
 
