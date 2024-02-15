@@ -2,6 +2,7 @@ package com.example.myrealog.api.service.discussion.request;
 
 import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.discussion.Discussion;
+import com.example.myrealog.domain.discussion.Discussion.DiscussionBuilder;
 import com.example.myrealog.v1.model.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,22 +18,20 @@ public class DiscussionCreateServiceRequest {
     private DiscussionCreateServiceRequest parent;
 
     @Builder
-    private DiscussionCreateServiceRequest(Long id,
-                                           int depth,
-                                           String content,
-                                           DiscussionCreateServiceRequest parent) {
+    private DiscussionCreateServiceRequest(Long id, int depth, String content, DiscussionCreateServiceRequest parent) {
         this.id = id;
         this.depth = depth;
         this.content = content;
         this.parent = parent;
     }
 
-    public Discussion toEntity(User findUser,
-                               Article findArticle) {
+    public Discussion toEntity(User user, Article article) {
 
-        final Discussion.DiscussionBuilder builder = Discussion.builder()
+        final DiscussionBuilder builder = Discussion.builder()
                 .id(this.id)
-                .content(this.content);
+                .content(this.content)
+                .user(user)
+                .article(article);
 
         if (this.parent == null) {
             builder.depth(0);

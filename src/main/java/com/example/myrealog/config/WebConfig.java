@@ -1,4 +1,4 @@
-package com.example.myrealog.v1.common.config;
+package com.example.myrealog.config;
 
 import com.example.myrealog.v1.common.auth.AuthorizedUserArgumentResolver;
 import com.example.myrealog.v1.common.filter.LogFilter;

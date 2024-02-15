@@ -5,6 +5,7 @@ import com.example.myrealog.v1.common.exception.UserNotFoundException;
 import com.example.myrealog.v1.model.User;
 import com.example.myrealog.v1.repository.UserRepository;
 import com.example.myrealog.v1.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ class UserServiceTest {
 
     @Autowired
     UserService userService;
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAllInBatch();
+    }
 
     @DisplayName("유저 정보를 받아 유저를 회원가입한다.")
     @Test

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static com.example.myrealog.domain.article.ArticleStatus.DRAFT;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 class ArticleServiceTest {
@@ -50,8 +51,8 @@ class ArticleServiceTest {
         final ArticleResponse draft = articleService.getDraftOrCreate(user.getId());
 
         //then
-        Assertions.assertThat(draft.getId()).isNotNull();
-        Assertions.assertThat(draft.getStatus()).isEqualTo(DRAFT);
+        assertThat(draft.getId()).isNotNull();
+        assertThat(draft.getStatus()).isEqualTo(DRAFT);
     }
 
     @DisplayName("유저를 받아 초안을 생성한다.")
@@ -68,8 +69,8 @@ class ArticleServiceTest {
         final ArticleResponse draft = articleService.createDraft(savedUser);
 
         //then
-        Assertions.assertThat(draft.getId()).isNotNull();
-        Assertions.assertThat(draft.getStatus()).isEqualTo(DRAFT);
+        assertThat(draft.getId()).isNotNull();
+        assertThat(draft.getStatus()).isEqualTo(DRAFT);
     }
 
     @DisplayName("초안이 없는 경우 초안을 생성해서 반환한다.")
@@ -86,8 +87,26 @@ class ArticleServiceTest {
         final ArticleResponse draft = articleService.getDraftOrCreate(savedUser.getId());
 
         //then
-        Assertions.assertThat(draft.getId()).isNotNull();
-        Assertions.assertThat(draft.getStatus()).isEqualTo(DRAFT);
+        assertThat(draft.getId()).isNotNull();
+        assertThat(draft.getStatus()).isEqualTo(DRAFT);
+    }
+
+    @DisplayName("아티클 아이디를 받아 찾은 아티클을 반환한다.")
+    @Test
+    void findByIdTest(){
+        //given
+        final User user = User.builder()
+                .email("email1@test.com")
+                .username("username1")
+                .build();
+        final User savedUser = userRepository.save(user);
+        final ArticleResponse draft = articleService.createDraft(savedUser);
+
+        //when
+        final Article findArticle = articleService.findById(draft.getId());
+
+        //then
+        assertThat(findArticle.getId()).isNotNull();
     }
 
 
