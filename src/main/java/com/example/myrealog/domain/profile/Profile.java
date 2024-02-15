@@ -1,7 +1,8 @@
-package com.example.myrealog.v1.model;
+package com.example.myrealog.domain.profile;
 
 import com.example.myrealog.domain.BaseTimeEntity;
 import com.example.myrealog.domain.user.User;
+import com.example.myrealog.v1.model.SocialChannel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

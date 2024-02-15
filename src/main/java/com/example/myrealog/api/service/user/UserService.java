@@ -1,5 +1,6 @@
 package com.example.myrealog.api.service.user;
 
+import com.example.myrealog.api.service.user.response.UserResponse;
 import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
 import com.example.myrealog.v1.common.exception.UserNotFoundException;
 import com.example.myrealog.domain.user.User;
@@ -33,14 +34,10 @@ public class UserService {
     }
 
     @Transactional
-    public User findUserAndProfileById(Long id) {
+    public UserResponse getMe(Long id) {
         final Optional<User> findUser = userRepository.findUserAndProfileById(id);
-        return validateUserExistence(findUser);
-
-    }
-
-    private User validateUserExistence(Optional<User> optionalUser) {
-        return optionalUser.orElseThrow(UserNotFoundException::new);
+        final User user = userRepository.findUserAndProfileById(id).orElseThrow(UserNotFoundException::new);
+        return UserResponse.of(user);
     }
 
     private void validateDuplicateUserByEmailAndUsername(String email, String username) {

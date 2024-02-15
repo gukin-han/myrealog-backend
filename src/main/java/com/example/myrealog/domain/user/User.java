@@ -5,7 +5,7 @@ import com.example.myrealog.domain.discussion.Discussion;
 import com.example.myrealog.v1.model.ArticleReaction;
 import com.example.myrealog.domain.BaseTimeEntity;
 import com.example.myrealog.v1.model.DiscussionReaction;
-import com.example.myrealog.v1.model.Profile;
+import com.example.myrealog.domain.profile.Profile;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;

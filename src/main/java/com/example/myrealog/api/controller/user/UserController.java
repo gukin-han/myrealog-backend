@@ -1,5 +1,7 @@
 package com.example.myrealog.api.controller.user;
 
+import com.example.myrealog.api.ApiResponse;
+import com.example.myrealog.api.service.user.response.UserResponse;
 import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
 import com.example.myrealog.v1.common.dto.response.AuthTokenResponse;
 import com.example.myrealog.v1.common.auth.Authorized;
@@ -21,22 +23,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
     private final OAuthService oAuthService;
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getMe(@Authorized UserPrincipal principal) {
-        final User user = userService.findUserAndProfileById(principal.getUserId());
-        return ResponseEntity.ok(ResponseWrapper.of(new MeDto(user)));
+    @GetMapping("/api/v1/users/me")
+    public ApiResponse<UserResponse> getMe(@Authorized UserPrincipal principal) {
+        return ApiResponse.ok(userService.getMe(principal.getUserId()));
     }
 
-    @PostMapping
+    @PostMapping("/api/v1/users")
     public ResponseEntity<?> signUp(@RequestBody @Valid UserSignupRequest request,
                                     HttpServletRequest httpServletRequest) {
 
@@ -54,18 +53,5 @@ public class UserController {
                 HttpStatus.CREATED,
                 ResponseWrapper.of(authToken)
         );
-    }
-
-    @Data
-    static class MeDto {
-        private String username;
-        private String displayName;
-        private String avatarUrl;
-
-        public MeDto(User user) {
-            username = user.getUsername();
-            displayName = user.getProfile().getDisplayName();
-            avatarUrl = user.getProfile().getAvatarUrl();
-        }
     }
 }
