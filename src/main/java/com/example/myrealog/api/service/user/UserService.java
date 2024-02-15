@@ -35,7 +35,6 @@ public class UserService {
 
     @Transactional
     public UserResponse getMe(Long id) {
-        final Optional<User> findUser = userRepository.findUserAndProfileById(id);
         final User user = userRepository.findUserAndProfileById(id).orElseThrow(UserNotFoundException::new);
         return UserResponse.of(user);
     }

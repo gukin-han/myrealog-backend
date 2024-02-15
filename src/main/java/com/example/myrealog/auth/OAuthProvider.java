@@ -1,4 +1,4 @@
-package com.example.myrealog.v1.common.auth;
+package com.example.myrealog.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

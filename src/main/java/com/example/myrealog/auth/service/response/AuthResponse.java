@@ -1,22 +1,22 @@
-package com.example.myrealog.v1.common.dto.response;
+package com.example.myrealog.auth.service.response;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
-public class AuthTokenResponse {
+public class AuthResponse {
     private Type type;
     private String value;
 
     @Builder
-    private AuthTokenResponse(Type type, String value) {
+    private AuthResponse(Type type, String value) {
         this.type = type;
         this.value = value;
     }
 
-    public static AuthTokenResponse of(Type type, String jwt) {
-        return new AuthTokenResponse(type, jwt);
+    public static AuthResponse of(Type type, String jwt) {
+        return new AuthResponse(type, jwt);
     }
 
     @RequiredArgsConstructor

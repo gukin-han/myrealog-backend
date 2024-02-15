@@ -1,5 +1,7 @@
-package com.example.myrealog.v1.common.auth;
+package com.example.myrealog.auth.controller;
 
+import com.example.myrealog.auth.OAuthProvider;
+import com.example.myrealog.auth.service.OAuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

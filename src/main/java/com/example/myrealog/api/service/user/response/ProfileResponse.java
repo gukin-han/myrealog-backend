@@ -1,17 +1,10 @@
 package com.example.myrealog.api.service.user.response;
 
 import com.example.myrealog.domain.profile.Profile;
-import com.example.myrealog.domain.user.User;
-import com.example.myrealog.v1.model.SocialChannel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static jakarta.persistence.CascadeType.REMOVE;
-
+@Getter
 public class ProfileResponse {
 
     private Long id;
