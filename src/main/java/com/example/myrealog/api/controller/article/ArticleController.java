@@ -90,7 +90,7 @@ public class ArticleController {
         public ArticleViewDto(Article article) {
             this.articleId = article.getId();
             this.title = article.getTitle();
-            this.createdDate = article.getCreatedDate();
+            this.createdDate = article.getCreatedDateTime();
             this.displayName = article.getUser().getProfile().getDisplayName();
             this.avatarUrl = article.getUser().getProfile().getAvatarUrl();
             this.content = article.getContent();
@@ -117,7 +117,7 @@ public class ArticleController {
             this.avatarUrl = article.getUser().getProfile().getAvatarUrl();
             this.displayName = article.getUser().getProfile().getDisplayName();
             this.username = article.getUser().getUsername();
-            this.createdDate = article.getCreatedDate();
+            this.createdDate = article.getCreatedDateTime();
             this.thumbnailUrl = article.getThumbnailUrl();
             this.excerpt = article.getExcerpt();
         }

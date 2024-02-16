@@ -29,11 +29,6 @@ public class Profile extends BaseTimeEntity {
     @OneToMany(mappedBy = "profile", cascade = {REMOVE}, orphanRemoval = true)
     private List<SocialChannel> socialChannels = new ArrayList<>();
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "profile")
-    @JoinColumn(nullable = false)
-    private User user;
-
     private String displayName;
     private String avatarUrl;
     private String bio;
@@ -48,9 +43,4 @@ public class Profile extends BaseTimeEntity {
     public static Profile of(String displayName, String bio) {
         return new Profile(displayName, bio, "");
     }
-
-    public void updateUser(User user) {
-        this.user = user;
-    }
-
 }

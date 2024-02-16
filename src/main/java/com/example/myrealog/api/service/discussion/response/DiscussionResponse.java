@@ -1,10 +1,14 @@
 package com.example.myrealog.api.service.discussion.response;
 
 import com.example.myrealog.api.service.article.response.ArticleResponse;
+import com.example.myrealog.api.service.user.response.UserResponse;
 import com.example.myrealog.domain.discussion.Discussion;
 import com.example.myrealog.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 @Getter
 public class DiscussionResponse {
@@ -13,30 +17,35 @@ public class DiscussionResponse {
     private int depth;
     private String content;
     private DiscussionResponse parent;
-    private ArticleResponse article;
-    private User user;
+    private UserResponse user;
+    private LocalDateTime createdDateTime;
+    private LocalDateTime lastModifiedDateTime;
 
     @Builder
     private DiscussionResponse(Long id,
                                int depth,
                                String content,
                                DiscussionResponse parent,
-                               ArticleResponse article,
-                               User user) {
+                               UserResponse user,
+                               LocalDateTime createdDateTime,
+                               LocalDateTime lastModifiedDateTime) {
         this.id = id;
         this.depth = depth;
         this.content = content;
         this.parent = parent;
-        this.article = article;
         this.user = user;
+        this.createdDateTime = createdDateTime;
+        this.lastModifiedDateTime = lastModifiedDateTime;
     }
 
-
     public static DiscussionResponse of(Discussion savedDiscussion) {
-        return DiscussionResponse.builder()
-                .id(savedDiscussion.getId())
-                .depth(savedDiscussion.getDepth())
-                .content(savedDiscussion.getContent())
-        .build();
+        return new DiscussionResponse(
+                savedDiscussion.getId(),
+                savedDiscussion.getDepth(),
+                savedDiscussion.getContent(),
+                savedDiscussion.getParent() == null ? null : DiscussionResponse.of(savedDiscussion.getParent()),
+                UserResponse.of(savedDiscussion.getUser()),
+                savedDiscussion.getCreatedDateTime(),
+                savedDiscussion.getLastModifiedDateTime());
     }
 }

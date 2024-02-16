@@ -72,9 +72,4 @@ public class User extends BaseTimeEntity {
     public void updateRecentlyPublishedDate(LocalDateTime date) {
         recentlyPublishedDate = date;
     }
-
-    public void updateProfile(Profile profile) {
-        this.profile = profile;
-        profile.updateUser(this);
-    }
 }

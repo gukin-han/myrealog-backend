@@ -11,10 +11,10 @@ public interface DiscussionRepository extends JpaRepository<Discussion, Long> {
     @Query("""
             SELECT discussion
             FROM Discussion discussion
-            JOIN FETCH discussion.parent parent
-            JOIN FETCH discussion.article article
-            JOIN FETCH discussion.user user
-            JOIN FETCH user.profile profile
+            LEFT JOIN FETCH discussion.parent parent
+            LEFT JOIN FETCH discussion.article article
+            LEFT JOIN FETCH discussion.user user
+            LEFT JOIN FETCH user.profile profile
             WHERE discussion.article.id = :articleId
            """)
     List<Discussion> findAllByArticleId(@Param("articleId") Long articleId);
