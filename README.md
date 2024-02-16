@@ -37,6 +37,8 @@ The Key Features followed by:
 
 ## Tech Stacks
 
+![image](https://github.com/gukin-han/myrealog-backend/assets/115940366/ade7329b-2074-4fc5-bb50-25b5b1e704c3)
+
 
 ## ERD
 
