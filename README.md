@@ -32,7 +32,7 @@ The Key Features followed by:
 2. Next Server analyzes it and makes request based on the request from browser to external API server which is Spring Application
 3. Spring Application handles and can query Database to retrieve data from MySQL Server installed in RDS.
 4. Spring Application then make response and return it to Next Server.
-5. Next Server handles response data and renders the specific URL route page.
+5. Next Server handles response data and renders the page at the specific URL route.
 6. Rendered page and data returned to Browser.
 
 ## Tech Stacks
