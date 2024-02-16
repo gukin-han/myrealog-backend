@@ -34,9 +34,6 @@ public class Discussion extends BaseTimeEntity {
     @JoinColumn(name = "parent_discussion_id")
     private Discussion parent;
 
-    @OneToMany(mappedBy = "parent")
-    private List<Discussion> children = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
     private Article article;
@@ -49,12 +46,11 @@ public class Discussion extends BaseTimeEntity {
     private List<DiscussionReaction> discussionReactions = new ArrayList<>();
 
     @Builder
-    private Discussion(Long id, int depth, String content, Discussion parent, List<Discussion> children, Article article, User user, List<DiscussionReaction> discussionReactions) {
+    private Discussion(Long id, int depth, String content, Discussion parent, Article article, User user, List<DiscussionReaction> discussionReactions) {
         this.id = id;
         this.depth = depth;
         this.content = content;
         this.parent = parent;
-        this.children = children;
         this.article = article;
         this.user = user;
         this.discussionReactions = discussionReactions;

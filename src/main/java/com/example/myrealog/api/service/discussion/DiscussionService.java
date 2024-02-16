@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
@@ -32,5 +34,10 @@ public class DiscussionService {
         final Discussion savedDiscussion = discussionRepository.save(createdDiscussion);
 
         return DiscussionResponse.of(savedDiscussion);
+    }
+
+    public List<DiscussionResponse> getDiscussions(Long articleId) {
+        final List<Discussion> discussions = discussionRepository.findAllByArticleId(articleId);
+        return discussions.stream().map(DiscussionResponse::of).toList();
     }
 }

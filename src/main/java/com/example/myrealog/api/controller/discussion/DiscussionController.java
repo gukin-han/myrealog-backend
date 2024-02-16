@@ -7,11 +7,11 @@ import com.example.myrealog.api.service.discussion.response.DiscussionResponse;
 import com.example.myrealog.auth.Authorized;
 import com.example.myrealog.auth.UserPrincipal;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,6 +31,11 @@ public class DiscussionController {
                         request.toServiceRequest()
                 )
         );
+    }
+
+    @GetMapping("/api/v1/articles/{id}/discussions")
+    public ApiResponse<List<DiscussionResponse>> getDiscussions(@PathVariable("id") Long articleId) {
+        return ApiResponse.ok(discussionService.getDiscussions(articleId));
     }
 
 }
