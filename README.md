@@ -1,6 +1,8 @@
 # Blog Service - MyReaLog
 <br />
 
+![image](https://github.com/gukin-han/myrealog-backend/assets/115940366/02a1a07c-2751-488c-b954-f9498171bfe7)
+
 You can visit demo website: [myrealog.com](https://myrealog.com)
 <br />
 
