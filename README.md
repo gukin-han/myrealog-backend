@@ -24,7 +24,10 @@ The Key Features followed by:
 * Further features will be included in the future.   
   <br />
 
-## Technology Stack
+## Architecture
+![Screenshot 2024-02-16 at 10 27 56 AM](https://github.com/gukin-han/myrealog-backend/assets/115940366/d108b30b-e285-4eab-91cf-230564f08faf)
+
+
 
 ## API Specification
 <br />
