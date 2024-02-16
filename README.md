@@ -1,11 +1,11 @@
 # Blog Service - MyReaLog
 <br />
 
-## Introduction
-This is a Spring Boot based API Server for managing Blog Contents including User Authentication, Article, Comments(=discussions), Reaction to Articles and Comments etc.   
+You can visit demo website: [myrealog.com](https://myrealog.com)
 <br />
 
-You can visit demo website: [myrealog.com](https://myrealog.com)
+## Introduction
+This is a Spring Boot based API Server for managing Blog Contents including User Authentication, Article, Comments(=discussions), Reaction to Articles and Comments etc.   
 <br />
 
 * **Period:** 2023.12 ~ (In progress)
@@ -26,8 +26,23 @@ The Key Features followed by:
 
 ## Architecture
 ![Screenshot 2024-02-16 at 10 27 56 AM](https://github.com/gukin-han/myrealog-backend/assets/115940366/d108b30b-e285-4eab-91cf-230564f08faf)
+1. Request (always be HTTP POST) from Browser send to Next Server deployed in Vercel.
+2. Next Server analyzes it and makes request based on the request from browser to external API server which is Spring Application
+3. Spring Application handles and can query Database to retrieve data from MySQL Server installed in RDS.
+4. Spring Application then make response and return it to Next Server.
+5. Next Server handles response data and renders the specific URL route page.
+6. Rendered page and data returned to Browser.
+
+## Tech Stacks
 
 
+## ERD
+
+![my-real-blog](https://github.com/gukin-han/myrealog-backend/assets/115940366/3d3fcf71-12c6-4ecb-af99-f875d445cfc1)
+* [Click here](https://github.com/gukin-han/myrealog-backend/assets/115940366/3d3fcf71-12c6-4ecb-af99-f875d445cfc1) to see a magnified image.
+* ERD can be modified at any moment while it's being developed.
+* Lastly Updated at 2023.01.22
+<br />
 
 ## API Specification
 <br />
@@ -60,28 +75,57 @@ The Key Features followed by:
 ## API Details
 <br />
 
-### `/api/v1/users/me`
-#### Sample Valid Response
+
+### Base API Response example
 ```json
 {
-  "username": "user123",
-  "displayName": "홍길동",
-  "avatarUrl": "https://example.com/avatar/user123.jpg"
+    "code": 200,
+    "httpStatus": "OK",
+    "message": "message example",
+    "data": "object",
+    "success": true
 }
+
+```
+
+* Api response will be wrapped by ApiResponse object
+
+### `/api/v1/users/me`
+
+```json
+{
+    "code": 200,
+    "httpStatus": "OK",
+    "success": true,
+    "message": "",
+    "data": {
+        "id": 1,
+        "username": "Gukin-Han",
+        "email": "gukin.dev@gmail.com",
+        "password": null,
+        "recentlyPublishedDate": null,
+        "profile": {
+          "id": 1,
+          "displayName": "Gukin-Han",
+          "avatarUrl": "",
+          "bio": "Gukin-Han"
+        }
+    }
+  
+}
+
 ```
 #### Status code
+
+**2xx**
 * 200 Ok: Successfully processed
-* 401 Unauthorized: Authentication fail
+* 203 Created: Successfully created
+
+**4xx**
 * 400 Bad Request: Successfully authenticated but not be able to find user info
+* 401 Unauthorized: Authentication fail
 
 <br />
 
-## ERD
 
-![my-real-blog](https://github.com/gukin-han/myrealog-backend/assets/115940366/3d3fcf71-12c6-4ecb-af99-f875d445cfc1)
 
-<br />
-
-## Expected Architecture
-
-![](https://github.com/gukin-han/myrealog-backend/assets/115940366/e193e010-6a6b-49a7-9284-2b35a2744f9b)
