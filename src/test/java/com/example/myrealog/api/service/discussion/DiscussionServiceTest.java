@@ -4,6 +4,8 @@ import com.example.myrealog.api.service.discussion.request.DiscussionCreateServi
 import com.example.myrealog.api.service.discussion.response.DiscussionResponse;
 import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.article.ArticleRepository;
+import com.example.myrealog.domain.discussion.Discussion;
+import com.example.myrealog.domain.discussion.DiscussionRepository;
 import com.example.myrealog.domain.profile.Profile;
 import com.example.myrealog.domain.user.User;
 import com.example.myrealog.domain.user.UserRepository;
@@ -31,15 +33,19 @@ class DiscussionServiceTest {
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private DiscussionRepository discussionRepository;
+
     @DisplayName("디스커션을 생성한다.")
     @Test
     void createDiscussionTest(){
         //given
-        final Profile profile1 = Profile.builder().displayName("displayName").build();
-        final User user = User.builder().email("email1@test.com").username("username1").profile(profile1).build();
+        final User user = createUserWithProfile("eamil1@test.com", "username1");
         final User savedUser = userRepository.save(user);
-        final Article article = Article.builder().title("title1").content("content1").excerpt("excerpt1").user(savedUser).build();
+
+        final Article article = createArticle(savedUser);
         final Article savedArticle = articleRepository.save(article);
+
         final DiscussionCreateServiceRequest request = DiscussionCreateServiceRequest.builder().build();
 
         //when
@@ -53,31 +59,82 @@ class DiscussionServiceTest {
     @Test
     void getDiscussionsByArticleIdTest(){
         //given
-        final Profile profile1 = Profile.builder().displayName("displayName").build();
-        final User user1 = User.builder().email("email1@test.com").username("username1").profile(profile1).build();
-        final User savedUser1 = userRepository.save(user1);
+        final User user1 = createUserWithProfile("email1@test.com", "username1");
+        final User user2 = createUserWithProfile("email2@test.com", "username2");
+        final List<User> savedUsers = userRepository.saveAll(List.of(user1, user2));
 
-        final Profile profile2 = Profile.builder().displayName("displayName").build();
-        final User user2 = User.builder().email("email2@test.com").username("username2").profile(profile2).build();
-        final User savedUser2 = userRepository.save(user2);
-
-        final Article article = Article.builder().title("title1").content("content1").excerpt("excerpt1").user(savedUser1).build();
+        final Article article = createArticle(savedUsers.get(0));
         final Article savedArticle = articleRepository.save(article);
 
-        final DiscussionCreateServiceRequest request = DiscussionCreateServiceRequest.builder().content("test content").build();
-        final Long articleId = savedArticle.getId();
-        final DiscussionResponse discussion1 = discussionService.createDiscussion(savedUser1.getId(), articleId, request);
-        final DiscussionResponse discussion2 = discussionService.createDiscussion(savedUser2.getId(), articleId, request);
+        final Discussion discussion1 = createDiscussion(savedUsers.get(0), article, null);
+        final Discussion discussion2 = createDiscussion(savedUsers.get(1), article, null);
+        final List<Discussion> savedDiscussions1 = discussionRepository.saveAll(List.of(discussion1, discussion2));
+
+        final Discussion discussion3 = createDiscussion(savedUsers.get(0), article, savedDiscussions1.get(0));
+        final Discussion discussion4 = createDiscussion(savedUsers.get(1), article, savedDiscussions1.get(0));
+        final Discussion discussion5 = createDiscussion(savedUsers.get(0), article, savedDiscussions1.get(1));
+        final Discussion discussion6 = createDiscussion(savedUsers.get(1), article, savedDiscussions1.get(1));
+        final List<Discussion> savedDiscussions2 = discussionRepository.saveAll(List.of(discussion3, discussion4, discussion5, discussion6));
+
 
         //when
-        final List<DiscussionResponse> discussions = discussionService.getDiscussions(articleId);
+        final List<DiscussionResponse> discussionResponses = discussionService.getDiscussions(savedArticle.getId());
 
         //then
-        assertThat(discussions).hasSize(2)
+        assertThat(discussionResponses).hasSize(2)
                 .extracting("content", "user.id", "user.profile.id")
                 .contains(
-                        Tuple.tuple("test content", discussion1.getUser().getId(), discussion1.getUser().getProfile().getId()),
-                        Tuple.tuple("test content", discussion2.getUser().getId(), discussion2.getUser().getProfile().getId())
+                        Tuple.tuple(
+                                "test content",
+                                discussion1.getUser().getId(),
+                                discussion1.getUser().getProfile().getId()),
+                        Tuple.tuple(
+                                "test content",
+                                discussion2.getUser().getId(),
+                                discussion2.getUser().getProfile().getId())
                 );
+
+        assertThat(discussionResponses.get(0).getChildren()).hasSize(2)
+                .extracting("content", "user.id", "user.profile.id")
+                .contains(
+                        Tuple.tuple(
+                                "test content",
+                                discussion3.getUser().getId(),
+                                discussion3.getUser().getProfile().getId()),
+                        Tuple.tuple(
+                                "test content",
+                                discussion4.getUser().getId(),
+                                discussion4.getUser().getProfile().getId())
+                );
+    }
+
+    private static Article createArticle(User user) {
+        return Article.builder()
+                .title("title1")
+                .content("content1")
+                .excerpt("excerpt1")
+                .user(user)
+                .build();
+    }
+
+    private static User createUserWithProfile(String email, String username) {
+        final Profile profile = Profile.builder()
+                .displayName("displayName")
+                .build();
+
+        return User.builder()
+                .email(email)
+                .username(username)
+                .profile(profile)
+                .build();
+    }
+
+    private Discussion createDiscussion(User user, Article article, Discussion parent) {
+        return Discussion.builder()
+                .content("test content")
+                .user(user)
+                .article(article)
+                .parent(parent)
+                .build();
     }
 }
