@@ -48,9 +48,18 @@ public class DiscussionService {
     }
 
     private List<DiscussionResponse> discussionResponseTreeBuilder(List<DiscussionResponse> discussionResponses) {
-        final Map<Long, DiscussionResponse> idToEntityMap = discussionResponses.stream()
-                .collect(Collectors.toMap(DiscussionResponse::getId, discussionResponse -> discussionResponse));
+        final Map<Long, DiscussionResponse> idToEntityMap = createEntityMapBy(discussionResponses);
+        addChildrenToParent(discussionResponses, idToEntityMap);
+        return filterRootDiscussion(discussionResponses);
+    }
 
+    private List<DiscussionResponse> filterRootDiscussion(List<DiscussionResponse> discussionResponses) {
+        return discussionResponses.stream()
+                .filter(discussionResponse -> !hasParent(discussionResponse))
+                .toList();
+    }
+
+    private void addChildrenToParent(List<DiscussionResponse> discussionResponses, Map<Long, DiscussionResponse> idToEntityMap) {
         discussionResponses.forEach(discussionResponse -> {
             if (hasParent(discussionResponse)) {
                 final Long parentId = discussionResponse.getParent().getId();
@@ -58,10 +67,11 @@ public class DiscussionService {
                 parent.getChildren().add(discussionResponse);
             }
         });
+    }
 
+    private Map<Long, DiscussionResponse> createEntityMapBy(List<DiscussionResponse> discussionResponses) {
         return discussionResponses.stream()
-                .filter(discussionResponse -> !hasParent(discussionResponse))
-                .toList();
+                .collect(Collectors.toMap(DiscussionResponse::getId, discussionResponse -> discussionResponse));
     }
 
     private boolean hasParent(DiscussionResponse discussionResponse) {
