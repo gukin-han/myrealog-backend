@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class DiscussionCreateServiceRequestTest {
@@ -38,5 +39,20 @@ class DiscussionCreateServiceRequestTest {
         //then
         assertThat(discussion.getDepth()).isEqualTo(0);
         assertThat(discussion.getParent()).isNull();
+    }
+
+    @DisplayName("디스커션 부모의 depth 가 1 보다 큰 경우 에러를 던진다.")
+    @Test
+    void discussionWithParentDepthMoreOneShouldThrowError(){
+        //given
+        final int parentDepth = 1;
+        final DiscussionCreateServiceRequest parent = DiscussionCreateServiceRequest.builder().depth(parentDepth).build();
+        final DiscussionCreateServiceRequest child = DiscussionCreateServiceRequest.builder().parent(parent).build();
+
+        //when
+        //then
+        assertThatThrownBy(() -> child.toEntity(null, null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("디스커션의 depth 필드는 0 혹은 1만 가능합니다.");
     }
 }

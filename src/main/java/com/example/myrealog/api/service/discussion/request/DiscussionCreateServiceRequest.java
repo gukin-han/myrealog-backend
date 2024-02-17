@@ -35,9 +35,10 @@ public class DiscussionCreateServiceRequest {
 
         if (this.parent == null) {
             builder.depth(0);
+        } else if (this.parent.getDepth() == 0) {
+            builder.depth(1).parent(this.parent.toEntity(null, null));
         } else {
-            builder.depth(this.parent.getDepth() + 1)
-                    .parent(this.parent.toEntity(null, null));
+            throw new IllegalArgumentException("디스커션의 depth 필드는 0 혹은 1만 가능합니다.");
         }
         return builder.build();
     }

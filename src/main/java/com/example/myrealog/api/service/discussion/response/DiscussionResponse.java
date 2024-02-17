@@ -9,6 +9,8 @@ import lombok.Getter;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class DiscussionResponse {
@@ -17,6 +19,7 @@ public class DiscussionResponse {
     private int depth;
     private String content;
     private DiscussionResponse parent;
+    private List<DiscussionResponse> children = new ArrayList<>();
     private UserResponse user;
     private LocalDateTime createdDateTime;
     private LocalDateTime lastModifiedDateTime;

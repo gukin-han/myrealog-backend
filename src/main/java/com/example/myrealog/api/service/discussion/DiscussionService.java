@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -38,6 +40,31 @@ public class DiscussionService {
 
     public List<DiscussionResponse> getDiscussions(Long articleId) {
         final List<Discussion> discussions = discussionRepository.findAllByArticleId(articleId);
-        return discussions.stream().map(DiscussionResponse::of).toList();
+        final List<DiscussionResponse> discussionResponses = discussions.stream()
+                .map(DiscussionResponse::of)
+                .toList();
+
+        return discussionResponseTreeBuilder(discussionResponses);
+    }
+
+    private List<DiscussionResponse> discussionResponseTreeBuilder(List<DiscussionResponse> discussionResponses) {
+        final Map<Long, DiscussionResponse> idToEntityMap = discussionResponses.stream()
+                .collect(Collectors.toMap(DiscussionResponse::getId, discussionResponse -> discussionResponse));
+
+        discussionResponses.forEach(discussionResponse -> {
+            if (hasParent(discussionResponse)) {
+                final Long parentId = discussionResponse.getParent().getId();
+                final DiscussionResponse parent = idToEntityMap.get(parentId);
+                parent.getChildren().add(discussionResponse);
+            }
+        });
+
+        return discussionResponses.stream()
+                .filter(discussionResponse -> !hasParent(discussionResponse))
+                .toList();
+    }
+
+    private boolean hasParent(DiscussionResponse discussionResponse) {
+        return discussionResponse.getParent() != null;
     }
 }
