@@ -102,7 +102,6 @@ The Key Features followed by:
     "data": "object",
     "success": true
 }
-
 ```
 
 * Api response will be wrapped by ApiResponse object
@@ -130,9 +129,11 @@ The Key Features followed by:
     }
   
 }
-
 ```
+<br />
+
 #### Status code
+<br />
 
 **2xx**
 * 200 Ok: Successfully processed
@@ -141,7 +142,6 @@ The Key Features followed by:
 **4xx**
 * 400 Bad Request: Successfully authenticated but not be able to find user info
 * 401 Unauthorized: Authentication fail
-
 <br />
 
 
