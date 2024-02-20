@@ -52,20 +52,33 @@ The Key Features followed by:
 <br />
 
 ### OAuth
+* Authentication required: ✔
+* Authentication not required: ✘
+<br />
 
-| Method | End Point                 | Description                | Auth         | Details  |
-|--------|---------------------------|----------------------------|--------------|----------|
-| GET    | `/api/v1/signin/oauth/google`           | Redirect to OAuth Provider | not required |          |
-| GET    | `/api/v1/signin/callback/google`        | Sign in                    | not required |          |
+| Method | End Point                            | Description                | Auth | Details  |
+|--------|--------------------------------------|----------------------------|------|----------|
+| GET    | `/api/v1/signin/oauth/google`        | Redirect to OAuth Provider | ✘    |          |
+| GET    | `/api/v1/signin/callback/google`     | Sign in                    | ✘    |          |
 <br />
 
 ### User
 
-| Method | End Point         | Description      | Auth                 | Details               |
-|--------|-------------------|------------------|----------------------|-----------------------|
-| POST   | `/api/v1/users`        | Register User    | SignupToken Required | |
-| GET    | `/api/v1/users/me`   | Get user profile | AccessToken Requried | [JSON](#apiv1usersme) |
+| Method | End Point           | Description      | Auth | Details               |
+|--------|---------------------|------------------|------|-----------------------|
+| POST   | `/api/v1/users`     | Register User    | ✔    |                       |
+| GET    | `/api/v1/users/me`  | Get user profile | ✔    | [JSON](#apiv1usersme) |
 <br />
+
+### Discussion
+| Method  | End Point                                       | Description                          | Auth     | Details |
+|---------|-------------------------------------------------|--------------------------------------|----------|---------|
+| POST    | `/api/v1/articles/{articleId}/discussions/new`  | Create new discussion in the article | ︎✔       |         |
+| GET     | `/api/v1/articles/{articleId}/discussions`      | Get All article related discussions  |          |         |
+| PATCH   | `/api/v1/discussions/{discussionId}`            | Update given {id} discussion         | ✔        |         |
+| DELETE  | `/api/v1/discussions/{discussionId}`            | Delete given {id} discussion         | ✔        |         |
+<br />
+
 
 ### Category
 | Method  | End Point                   | Description                | Auth | Details |
@@ -74,7 +87,7 @@ The Key Features followed by:
 | GET     | `/api/v1/categories`        | Get All categories         |      |         |
 | PATCH   | `/api/v1/categories/{id}`   | Update given {id} category |      |         |
 | DELETE  | `/api/v1/cateogries/{id}`   | Delete given {id} category |      |         |
-
+<br />
 
 ## API Details
 <br />

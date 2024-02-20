@@ -70,6 +70,12 @@ class DiscussionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
     }
 
+    private ResultActions performDeleteRequest(int discussionId) throws Exception {
+        return mockMvc.perform(delete("/api/v1/discussions/{discussionId}", discussionId)
+                .header("Authorization", "accessToken")
+                .contentType(MediaType.APPLICATION_JSON));
+    }
+
     @DisplayName("새 디스커션을 생성한다.")
     @Test
     void createDiscussionTest() throws Exception {
@@ -149,6 +155,46 @@ class DiscussionControllerTest {
                 .andExpect(jsonPath("$.httpStatus").value("OK"))
                 .andExpect(jsonPath("$.message").value(""))
                 .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("디스커션을 업데이트할때 디스커션 내용은 필수값이다.")
+    @Test
+    void updateDiscussionWithoutContentTest() throws Exception {
+        // given
+        final DiscussionUpdateRequest request = DiscussionUpdateRequest.builder()
+                .content("")
+                .build();
+
+        // when
+        final ResultActions resultActions = performUpdateRequest(1, request);
+
+        // then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.httpStatus").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.message").value("디스커션 내용은 필수입니다."))
+                .andExpect(jsonPath("$.code").value("400"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("디스커션 아이디로 디스커션을 삭제한다.")
+    @Test
+    void deleteDiscussionTest() throws Exception {
+        //given
+        int discussionId = 1;
+
+        //when
+        final ResultActions resultActions = performDeleteRequest(discussionId);
+
+        //then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.httpStatus").value("NO_CONTENT"))
+                .andExpect(jsonPath("$.message").value(""))
+                .andExpect(jsonPath("$.code").value("204"))
                 .andExpect(jsonPath("$.data").isEmpty());
     }
 }

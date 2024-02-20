@@ -50,7 +50,14 @@ public class DiscussionController {
                         request.toServiceRequest()
                 )
         );
+    }
 
+    @DeleteMapping("/api/v1/discussions/{discussionId}")
+    public ApiResponse<Void> deleteDiscussion(@Authorized UserPrincipal principal,
+                                              @PathVariable("discussionId") Long discussionId) {
+
+        discussionService.deleteDiscussion(principal.getUserId(), discussionId);
+        return ApiResponse.noContent();
     }
 
 }

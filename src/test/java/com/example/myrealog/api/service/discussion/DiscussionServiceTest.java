@@ -13,6 +13,7 @@ import com.example.myrealog.domain.user.UserRepository;
 import com.example.myrealog.v1.common.exception.DiscussionNotFoundException;
 import com.example.myrealog.v1.common.exception.UnauthorizedException;
 import org.assertj.core.groups.Tuple;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Transactional
 @SpringBootTest
 class DiscussionServiceTest {
 
@@ -40,6 +40,13 @@ class DiscussionServiceTest {
 
     @Autowired
     private DiscussionRepository discussionRepository;
+
+    @AfterEach
+    void tearDown() {
+        discussionRepository.deleteAllInBatch();
+        articleRepository.deleteAllInBatch();
+        userRepository.deleteAllInBatch();
+    }
 
     @DisplayName("디스커션을 생성한다.")
     @Test
@@ -149,7 +156,7 @@ class DiscussionServiceTest {
 
     @DisplayName("디스커션을 업데이트한다.")
     @Test
-    void discussionUpdateTest(){
+    void updateDiscussionTest(){
         //given
         final User user = createUserWithProfile("eamil1@test.com", "username1");
         final User savedUser = userRepository.save(user);
@@ -174,7 +181,7 @@ class DiscussionServiceTest {
 
     @DisplayName("디스커션 업데이트 시 작성자가 아닌 유저가 요청한 경우 에러를 던진다.")
     @Test
-    void discussionUpdateRequestByNotWriter_thenThrowErrorTest(){
+    void updateDiscussionWithRequestByNotWriter_thenThrowErrorTest(){
         //given
         final User user1 = createUserWithProfile("eamil1@test.com", "username1");
         final User user2 = createUserWithProfile("eamil2@test.com", "username2");
@@ -194,6 +201,30 @@ class DiscussionServiceTest {
         assertThatThrownBy(() -> discussionService.updateDiscussion(savedUsers.get(1).getId(), savedDiscussion.getId(), request))
                 .isInstanceOf(UnauthorizedException.class)
                 .hasMessage("접근 권한이 없는 유저입니다.");
+    }
+
+    @DisplayName("디스커션 아이디로 디스커션을 삭제한다.")
+    @Test
+    void deleteDiscussionByDiscussionId(){
+        //given
+        final User user = createUserWithProfile("eamil1@test.com", "username1");
+        final User savedUser = userRepository.save(user);
+
+        final Article article = createArticle(savedUser);
+        final Article savedArticle = articleRepository.save(article);
+
+        final Discussion discussion = createDiscussion(savedUser, savedArticle);
+        final Discussion savedDiscussion = discussionRepository.save(discussion);
+
+        final Long userId = savedUser.getId();
+        final Long discussionId = savedDiscussion.getId();
+
+        //when
+        discussionService.deleteDiscussion(userId, discussionId);
+
+        //then
+        final Optional<Discussion> optionalDiscussion = discussionRepository.findById(discussionId);
+        assertThat(optionalDiscussion.isEmpty()).isTrue();
     }
 
 

@@ -3,6 +3,7 @@ package com.example.myrealog.api;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 @Getter
@@ -26,5 +27,9 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> ok(T data) {
         return of(true, OK, "", data);
+    }
+
+    public static <T> ApiResponse<T> noContent() {
+        return of(true, NO_CONTENT, "", null);
     }
 }

@@ -50,30 +50,6 @@ public class DiscussionService {
         return discussionResponseTreeBuilder(discussionResponses);
     }
 
-    @Transactional
-    public DiscussionResponse updateDiscussion(Long userId,
-                                               Long discussionId,
-                                               DiscussionUpdateServiceRequest request) {
-
-        final User findUser = userService.findById(userId);
-        final Discussion findDiscussion = findDiscussionWithUserById(discussionId);
-        validateIfRequestUserIsDiscussionWriter(findUser, findDiscussion);
-
-        final Discussion updatedDiscussion = findDiscussion.updateContent(request.getContent());
-        return DiscussionResponse.of(updatedDiscussion);
-    }
-
-    private void validateIfRequestUserIsDiscussionWriter(User findUser, Discussion findDiscussion) {
-        if (findDiscussion.getUser().getId() != findUser.getId()) {
-            throw new UnauthorizedException();
-        }
-    }
-
-    @Transactional
-    public Discussion findDiscussionWithUserById(Long discussionId) {
-        return discussionRepository.findDiscussionWithUserById(discussionId)
-                .orElseThrow(DiscussionNotFoundException::new);
-    }
 
     private List<DiscussionResponse> discussionResponseTreeBuilder(List<DiscussionResponse> discussionResponses) {
         final Map<Long, DiscussionResponse> idToEntityMap = createEntityMapBy(discussionResponses);
@@ -106,4 +82,36 @@ public class DiscussionService {
         return discussionResponse.getParent() != null;
     }
 
+    @Transactional
+    public DiscussionResponse updateDiscussion(Long userId,
+                                               Long discussionId,
+                                               DiscussionUpdateServiceRequest request) {
+
+        final User findUser = userService.findById(userId);
+        final Discussion findDiscussion = findDiscussionWithUserById(discussionId);
+        validateIfRequestUserIsDiscussionWriter(findUser, findDiscussion);
+
+        final Discussion updatedDiscussion = findDiscussion.updateContent(request.getContent());
+        return DiscussionResponse.of(updatedDiscussion);
+    }
+
+    private void validateIfRequestUserIsDiscussionWriter(User findUser, Discussion findDiscussion) {
+        if (findDiscussion.getUser().getId() != findUser.getId()) {
+            throw new UnauthorizedException();
+        }
+    }
+
+    @Transactional
+    public Discussion findDiscussionWithUserById(Long discussionId) {
+        return discussionRepository.findDiscussionWithUserById(discussionId)
+                .orElseThrow(DiscussionNotFoundException::new);
+    }
+
+    @Transactional
+    public void deleteDiscussion(Long userId, Long discussionId) {
+        final User findUser = userService.findById(userId);
+        final Discussion findDiscussion = findDiscussionWithUserById(discussionId);
+        validateIfRequestUserIsDiscussionWriter(findUser, findDiscussion);
+        discussionRepository.delete(findDiscussion);
+    }
 }
