@@ -9,19 +9,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CreateDiscussionRequest {
+public class DiscussionCreateRequest {
 
-    private Long id;
     private int depth;
 
     @NotBlank(message = "디스커션 내용은 필수입니다.")
     private String content;
 
-    private CreateDiscussionRequest parent;
+    private DiscussionCreateRequest parent;
 
     @Builder
-    private CreateDiscussionRequest(Long id, int depth, String content, CreateDiscussionRequest parent) {
-        this.id = id;
+    private DiscussionCreateRequest(int depth, String content, DiscussionCreateRequest parent) {
         this.depth = depth;
         this.content = content;
         this.parent = parent;
@@ -29,7 +27,6 @@ public class CreateDiscussionRequest {
 
     public DiscussionCreateServiceRequest toServiceRequest() {
         final DiscussionCreateServiceRequestBuilder builder = DiscussionCreateServiceRequest.builder()
-                .id(id)
                 .depth(depth)
                 .content(content);
 

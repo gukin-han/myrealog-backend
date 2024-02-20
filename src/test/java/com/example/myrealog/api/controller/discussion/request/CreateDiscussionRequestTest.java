@@ -1,12 +1,10 @@
 package com.example.myrealog.api.controller.discussion.request;
 
 import com.example.myrealog.api.service.discussion.request.DiscussionCreateServiceRequest;
-import com.example.myrealog.domain.discussion.Discussion;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CreateDiscussionRequestTest {
 
@@ -15,8 +13,8 @@ class CreateDiscussionRequestTest {
     @Test
     void toServiceRequestWithParentTest(){
         //given
-        final CreateDiscussionRequest parent = CreateDiscussionRequest.builder().build();
-        final CreateDiscussionRequest child = CreateDiscussionRequest.builder().parent(parent).build();
+        final DiscussionCreateRequest parent = DiscussionCreateRequest.builder().build();
+        final DiscussionCreateRequest child = DiscussionCreateRequest.builder().parent(parent).build();
 
         //when
         final DiscussionCreateServiceRequest serviceRequest = child.toServiceRequest();
@@ -29,7 +27,7 @@ class CreateDiscussionRequestTest {
     @Test
     void toServiceRequestWithoutParentTest(){
         //given
-        final CreateDiscussionRequest child = CreateDiscussionRequest.builder().parent(null).build();
+        final DiscussionCreateRequest child = DiscussionCreateRequest.builder().parent(null).build();
 
         //when
         final DiscussionCreateServiceRequest serviceRequest = child.toServiceRequest();

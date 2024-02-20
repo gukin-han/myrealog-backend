@@ -55,4 +55,9 @@ public class Discussion extends BaseTimeEntity {
         this.user = user;
         this.discussionReactions = discussionReactions;
     }
+
+    public Discussion updateContent(String content) {
+        this.content = content;
+        return this;
+    }
 }
