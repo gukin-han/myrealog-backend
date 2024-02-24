@@ -51,11 +51,10 @@ The Key Features followed by:
 ## API Specification
 <br />
 
-### OAuth
 * Authentication required: ✔
 * Authentication not required: ✘
-<br />
 
+### OAuth
 | Method | End Point                            | Description                | Auth | Details  |
 |--------|--------------------------------------|----------------------------|------|----------|
 | GET    | `/api/v1/signin/oauth/google`        | Redirect to OAuth Provider | ✘    |          |
@@ -63,20 +62,34 @@ The Key Features followed by:
 <br />
 
 ### User
-
-| Method | End Point           | Description      | Auth | Details               |
-|--------|---------------------|------------------|------|-----------------------|
-| POST   | `/api/v1/users`     | Register User    | ✔    |                       |
-| GET    | `/api/v1/users/me`  | Get user profile | ✔    | [JSON](#apiv1usersme) |
+| Method | End Point                                    | Description                      | Auth |
+|--------|----------------------------------------------|----------------------------------|------|
+| POST   | `/api/v1/users`                              | Register User                    | ✔    |
+| GET    | `/api/v1/users/me`                           | Get user with profile            | ✔    |
+| DELETE | `/api/v1/users/{userId}`                     | Delete a user by {userId}        | ✔    |
+| PATCH  | `/api/v1/users/{userId}/profile/{profileId}` | Update profile elements by {Ids} | ✔    |
 <br />
 
+### Article
+| Method | End Point                              | Description                                  | Auth |
+|--------|----------------------------------------|----------------------------------------------|------|
+| POST   | `/api/v1/articles/draft`               | Create a draft or return the existing one    | ✔    |
+| GET    | `/api/v1/articles/{username}/{slug}`   | Get an existing article by username and slug |      |
+| GET    | `/api/v1/articles/users/{userId}`      | Get All recent articles by {userId}          |      |
+| GET    | `/api/v1/articles/recent`              | Get All recent articles                      |      |
+| PATCH  | `/api/v1/articles/{articleId}`         | Update an article by {articleId}             | ✔    |
+| PATCH  | `/api/v1/articles/{articleId}/publish` | Make a draft publish by {articleId}          | ✔    |
+| DELETE | `/api/v1/articles/{articleId}`         | Delete an article by {articleId}             | ✔    |
+
+
+
 ### Discussion
-| Method  | End Point                                       | Description                          | Auth     | Details |
-|---------|-------------------------------------------------|--------------------------------------|----------|---------|
-| POST    | `/api/v1/articles/{articleId}/discussions/new`  | Create new discussion in the article | ︎✔       |         |
-| GET     | `/api/v1/articles/{articleId}/discussions`      | Get All article related discussions  |          |         |
-| PATCH   | `/api/v1/discussions/{discussionId}`            | Update given {id} discussion         | ✔        |         |
-| DELETE  | `/api/v1/discussions/{discussionId}`            | Delete given {id} discussion         | ✔        |         |
+| Method  | End Point                                       | Description                            | Auth | Details |
+|---------|-------------------------------------------------|----------------------------------------|------|---------|
+| POST    | `/api/v1/articles/{articleId}/discussions/new`  | Create new discussion in the article   | ✔    |         |
+| GET     | `/api/v1/articles/{articleId}/discussions`      | Get All article related discussions    |      |         |
+| PATCH   | `/api/v1/discussions/{discussionId}`            | Update given {id} discussion           | ✔    |         |
+| DELETE  | `/api/v1/discussions/{discussionId}`            | Delete given {id} discussion           | ✔    |         |
 <br />
 
 

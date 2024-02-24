@@ -93,6 +93,8 @@ public class Article extends BaseTimeEntity {
                 .title("")
                 .content("")
                 .excerpt("")
+                .slug("")
+                .thumbnailUrl("")
                 .articleStatus(ArticleStatus.DRAFT)
                 .build();
     }

@@ -28,11 +28,6 @@ public class UserController {
     private final UserService userService;
     private final OAuthService oAuthService;
 
-    @GetMapping("/api/v1/users/me")
-    public ApiResponse<UserResponse> getMe(@Authorized UserPrincipal principal) {
-        return ApiResponse.ok(userService.getMe(principal.getUserId()));
-    }
-
     @PostMapping("/api/v1/users/signup")
     public ResponseEntity<?> signUp(@Authorized UserPrincipal principal,
                                     @RequestBody @Valid UserSignupRequest request) {
@@ -48,4 +43,10 @@ public class UserController {
                 ResponseWrapper.of(authToken)
         );
     }
+
+    @GetMapping("/api/v1/users/me")
+    public ApiResponse<UserResponse> getMe(@Authorized UserPrincipal principal) {
+        return ApiResponse.ok(userService.getMe(principal.getUserId()));
+    }
+
 }

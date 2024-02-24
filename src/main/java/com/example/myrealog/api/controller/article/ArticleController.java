@@ -7,7 +7,6 @@ import com.example.myrealog.domain.article.ArticleStatus;
 import com.example.myrealog.auth.Authorized;
 import com.example.myrealog.auth.UserPrincipal;
 import com.example.myrealog.v1.common.dto.request.ArticlePublishFormRequest;
-import com.example.myrealog.v1.common.dto.response.ResponseWrapper;
 import com.example.myrealog.api.service.article.ArticleService;
 import jakarta.validation.Valid;
 import lombok.Data;
@@ -27,6 +26,27 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
+    @PostMapping("/api/v1/articles/draft")
+    public ApiResponse<ArticleResponse> createDraft(@Authorized UserPrincipal principal) {
+        return (ApiResponse.ok(articleService.createDraftOrGet(principal.getUserId())));
+    }
+
+    @GetMapping("/api/v1/articles/{username}/{slug}")
+    public ApiResponse<ArticleResponse> getOneBySlugAndUsername(@PathVariable("username") String username,
+                                                                @PathVariable("slug") String slug) {
+
+        return ApiResponse.ok(articleService.findPublicArticleBySlugAndUsername(slug, username));
+    }
+
+    @GetMapping("/api/v1/articles/recent")
+    public ApiResponse<List<ArticleResponse>> getRecentArticles() {
+        final List<Article> recentArticles = articleService.getRecentArticles();
+        final List<ArticleCardDto> dto = recentArticles.stream().map(ArticleCardDto::new).toList();
+        return null;
+    }
+
+    // <------------------------ Refactored -------------------------------->
+
     @PostMapping("/api/v1/articles")
     public ResponseEntity<Void> publishArticle(@Authorized UserPrincipal principal,
                                                @RequestBody @Valid ArticlePublishFormRequest form) {
@@ -38,26 +58,9 @@ public class ArticleController {
             return ResponseEntity.created(URI.create(redirectUri)).build();
     }
 
-    @GetMapping("/api/v1/articles/draft")
-    public ApiResponse<ArticleResponse> getDraft(@Authorized UserPrincipal principal) {
-        return (ApiResponse.ok(articleService.getDraftOrCreate(principal.getUserId())));
-    }
 
 
-    @GetMapping("/api/v1/articles/recent")
-    public ResponseEntity<?> getRecentArticles() {
-        final List<Article> recentArticles = articleService.getRecentArticles();
-        final List<ArticleCardDto> dto = recentArticles.stream().map(ArticleCardDto::new).toList();
-        return ResponseEntity.ok(ResponseWrapper.of(dto));
-    }
 
-    @GetMapping("/api/v1/articles/{username}/{slug}")
-    public ResponseEntity<?> getOneBySlugAndUsername(@PathVariable("username") String username,
-                                                     @PathVariable("slug") String slug) {
-
-        final Article article = articleService.findArticleBySlugAndUsername(slug, username);
-        return ResponseEntity.ok(ResponseWrapper.of(new ArticleViewDto(article)));
-    }
 
     @DeleteMapping("/api/v1/articles/{id}")
     public ResponseEntity<?> deleteArticle(@Authorized UserPrincipal principal,
@@ -75,27 +78,6 @@ public class ArticleController {
         final Article updatedArticle = articleService.updateArticle(articleId, principal.getUserId(), form);
         final String redirectUri = "/" + updatedArticle.getUser().getUsername() + "/" + updatedArticle.getSlug();
         return ResponseEntity.created(URI.create(redirectUri)).build();
-    }
-
-    @Data
-    static class ArticleViewDto {
-        private Long articleId;
-        private String title;
-        private LocalDateTime createdDate;
-        private String displayName;
-        private String avatarUrl;
-        private String content;
-        private String excerpt;
-
-        public ArticleViewDto(Article article) {
-            this.articleId = article.getId();
-            this.title = article.getTitle();
-            this.createdDate = article.getCreatedDateTime();
-            this.displayName = article.getUser().getProfile().getDisplayName();
-            this.avatarUrl = article.getUser().getProfile().getAvatarUrl();
-            this.content = article.getContent();
-            this.excerpt = article.getExcerpt();
-        }
     }
 
     @Data

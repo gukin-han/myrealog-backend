@@ -5,7 +5,7 @@ import com.example.myrealog.api.service.discussion.request.DiscussionCreateServi
 import com.example.myrealog.api.service.discussion.response.DiscussionResponse;
 import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.article.ArticleRepository;
-import com.example.myrealog.domain.profile.Profile;
+import com.example.myrealog.domain.user.Profile;
 import com.example.myrealog.domain.user.User;
 import com.example.myrealog.domain.user.UserRepository;
 import org.assertj.core.groups.Tuple;
@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Transactional
 @SpringBootTest

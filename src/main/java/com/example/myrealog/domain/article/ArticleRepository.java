@@ -12,17 +12,17 @@ import java.util.Optional;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-
     @Query("""
            SELECT article
            FROM Article article
            JOIN FETCH article.user user
            JOIN FETCH user.profile profile
            WHERE article.slug = :slug
+           AND article.articleStatus = 'PUBLIC'
            AND user.username = :username
            """)
-    Optional<Article> findBySlugAndUsername(@Param("slug") final String slug,
-                                            @Param("username") final String username);
+    Optional<Article> findPublicArticleWithUserAndProfileBySlugAndUsername(@Param("slug") final String slug,
+                                                                           @Param("username") final String username);
 
     @Query("""
             SELECT article
@@ -44,5 +44,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
            """)
     List<Article> findAllWithUserProfile();
 
-    List<Article> findByUserAndArticleStatus(User user, ArticleStatus articleStatus);
+
+    Optional<Article> findTopByUserAndArticleStatusOrderByCreatedDateTimeDesc(User user, ArticleStatus articleStatus);
 }

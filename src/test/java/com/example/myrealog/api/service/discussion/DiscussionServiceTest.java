@@ -7,7 +7,7 @@ import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.article.ArticleRepository;
 import com.example.myrealog.domain.discussion.Discussion;
 import com.example.myrealog.domain.discussion.DiscussionRepository;
-import com.example.myrealog.domain.profile.Profile;
+import com.example.myrealog.domain.user.Profile;
 import com.example.myrealog.domain.user.User;
 import com.example.myrealog.domain.user.UserRepository;
 import com.example.myrealog.v1.common.exception.DiscussionNotFoundException;
@@ -18,7 +18,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service
@@ -22,8 +23,37 @@ import java.util.List;
 public class ArticleService {
 
     public static final int SEVEN_DAYS = 7;
+    public static final String ERROR_MESSAGE_NOT_EXISTING_ARTICLE = "존재하지 않는 아티클입니다.";
     private final ArticleRepository articleRepository;
     private final UserService userService;
+
+    @Transactional
+    public ArticleResponse createDraftOrGet(Long userId) {
+
+        final User user = userService.findById(userId);
+        final Optional<Article> optionalArticle = articleRepository.findTopByUserAndArticleStatusOrderByCreatedDateTimeDesc(user, ArticleStatus.DRAFT);
+        if (optionalArticle.isEmpty()) {
+            return createDraft(user);
+        } else {
+            return ArticleResponse.of(optionalArticle.get());
+        }
+    }
+
+    @Transactional
+    public ArticleResponse createDraft(User user) {
+        final Article draft = Article.createDraft(user);
+        final Article savedDraft = articleRepository.save(draft);
+        return ArticleResponse.of(savedDraft);
+    }
+
+    @Transactional(readOnly = true)
+    public ArticleResponse findPublicArticleBySlugAndUsername(final String slug,
+                                                              final String username) {
+
+        final Article article = articleRepository.findPublicArticleWithUserAndProfileBySlugAndUsername(slug, username)
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE_NOT_EXISTING_ARTICLE));
+        return ArticleResponse.of(article);
+    }
 
     @Transactional
     public Article publishArticle(Article article, Long userId) {
@@ -49,13 +79,7 @@ public class ArticleService {
                 .toDays() >= SEVEN_DAYS;
     }
 
-    @Transactional(readOnly = true)
-    public Article findArticleBySlugAndUsername(final String slug,
-                                                final String username) {
 
-        return articleRepository.findBySlugAndUsername(slug, username)
-                .orElseThrow(IllegalArgumentException::new);
-    }
 
     @Transactional
     public void deleteById(Long articleId, Long userId) {
@@ -85,26 +109,8 @@ public class ArticleService {
         return articleRepository.findAllWithUserProfile();
     }
 
-    @Transactional
-    public ArticleResponse getDraftOrCreate(Long userId) {
-        final User user = userService.findById(userId);
-        final List<Article> drafts = articleRepository.findByUserAndArticleStatus(user, ArticleStatus.DRAFT);
-        if (drafts.isEmpty()) {
-            return createDraft(user);
-        } else {
-            return ArticleResponse.of(drafts.get(0));
-        }
-    }
-
-    @Transactional
-    public ArticleResponse createDraft(User user) {
-        final Article draft = Article.createDraft(user);
-        final Article savedDraft = articleRepository.save(draft);
-        return ArticleResponse.of(savedDraft);
-    }
-
     public Article findById(Long articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 아티클입니다."));
+                .orElseThrow(() -> new IllegalArgumentException(ERROR_MESSAGE_NOT_EXISTING_ARTICLE));
     }
 }

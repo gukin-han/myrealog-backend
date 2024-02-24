@@ -1,6 +1,6 @@
 package com.example.myrealog.api.service.user.response;
 
-import com.example.myrealog.domain.profile.Profile;
+import com.example.myrealog.domain.user.Profile;
 import lombok.Builder;
 import lombok.Getter;
 

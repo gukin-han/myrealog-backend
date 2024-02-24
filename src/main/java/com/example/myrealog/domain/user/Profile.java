@@ -1,9 +1,6 @@
-package com.example.myrealog.domain.profile;
+package com.example.myrealog.domain.user;
 
 import com.example.myrealog.domain.BaseTimeEntity;
-import com.example.myrealog.domain.user.User;
-import com.example.myrealog.v1.model.SocialChannel;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,12 +23,12 @@ public class Profile extends BaseTimeEntity {
     @Column(name = "profile_id")
     private Long id;
 
-    @OneToMany(mappedBy = "profile", cascade = {REMOVE}, orphanRemoval = true)
-    private List<SocialChannel> socialChannels = new ArrayList<>();
-
     private String displayName;
     private String avatarUrl;
     private String bio;
+    private String githubUrl;
+    private String linkedinUrl;
+    private String displayEmail;
 
     @Builder
     private Profile(String displayName, String bio, String avatarUrl) {
