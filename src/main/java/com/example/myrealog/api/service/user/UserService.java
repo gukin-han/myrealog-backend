@@ -1,7 +1,7 @@
 package com.example.myrealog.api.service.user;
 
 import com.example.myrealog.api.service.user.response.UserResponse;
-import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
+import com.example.myrealog.v1.common.dto.request.UserSignUpRequest;
 import com.example.myrealog.v1.common.exception.UserNotFoundException;
 import com.example.myrealog.domain.user.User;
 import com.example.myrealog.domain.user.UserRepository;
@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,11 +20,9 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public User signUp(UserSignupRequest request, String email) {
+    public User signUp(UserSignUpRequest request, String email, LocalDateTime now) {
         validateDuplicateUserByEmailAndUsername(email, request.getUsername());
-
-        final User user = User.create(email, request.getUsername(), request.getDisplayName(), request.getBio());
-        return userRepository.save(user);
+        return userRepository.save(User.of(email, request.getUsername(), request.getDisplayName(), request.getBio(), now));
     }
 
     @Transactional

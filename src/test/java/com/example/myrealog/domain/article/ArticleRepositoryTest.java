@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.example.myrealog.domain.article.ArticleStatus.*;
@@ -109,6 +110,30 @@ ArticleRepositoryTest {
 
         //then
         assertThat(optionalArticle.isEmpty()).isTrue();
+    }
+
+    @DisplayName("아티클의 메타정보를 최신 순서대로 모두 조회한다.")
+    @Test
+    void test(){
+        //given
+        final User user = createUser("username");
+        final User savedUser = userRepository.save(user);
+
+        final Article article1 = createArticle(savedUser, PUBLIC, "slug");
+        final Article article2 = createArticle(savedUser, PUBLIC, "slug");
+        final Article article3 = createArticle(savedUser, PUBLIC, "slug");
+        final Article article4 = createArticle(savedUser, DRAFT, "slug");
+        final List<Article> savedArticles = articleRepository.saveAll(List.of(article1, article2, article3, article4));
+
+        //when
+        final List<Article> findArticles = articleRepository.findAllWithUserAndProfile();
+        final Article mostRecentOne = savedArticles.get(2);
+
+        //then
+        assertThat(findArticles).hasSize(3);
+        assertThat(findArticles.get(0).getId()).isEqualTo(mostRecentOne.getId());
+        assertThat(findArticles.get(0).getUser().getId()).isNotNull();
+        assertThat(findArticles.get(0).getUser().getProfile().getId()).isNotNull();
     }
 
     private static Article createArticle(User savedUser, ArticleStatus articleStatus, String slug) {

@@ -1,18 +1,16 @@
 package com.example.myrealog.api.service.article;
 
+import com.example.myrealog.api.controller.article.request.ArticleUpdateRequest;
 import com.example.myrealog.api.service.article.response.ArticleResponse;
 import com.example.myrealog.domain.article.Article;
 import com.example.myrealog.domain.article.ArticleRepository;
 import com.example.myrealog.domain.article.ArticleStatus;
-import com.example.myrealog.v1.common.dto.request.ArticlePublishFormRequest;
-import com.example.myrealog.v1.common.exception.NotEnoughDaysForPublishingException;
 import com.example.myrealog.api.service.user.UserService;
 import com.example.myrealog.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +20,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ArticleService {
 
-    public static final int SEVEN_DAYS = 7;
+    public static final Long SEVEN_DAYS = 7L;
     public static final String ERROR_MESSAGE_NOT_EXISTING_ARTICLE = "존재하지 않는 아티클입니다.";
+    public static final String ERROR_MESSAGE_NOT_ENOUGH_DAYS_TO_PUBLISH = "기간이 충분하지 않아 게시할 수 없습니다.";
+    public static final String ERROR_MESSAGE_ALREADY_PUBLIC_ARTICLE = "이미 게시된 아티클입니다.";
     private final ArticleRepository articleRepository;
     private final UserService userService;
 
@@ -56,30 +56,33 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article publishArticle(Article article, Long userId) {
-        final User findUser = userService.findById(userId);
-        final LocalDateTime date = findUser.getRecentlyPublishedDate();
+    public ArticleResponse publishArticle(Long userId,
+                                          Long articleId,
+                                          LocalDateTime now) {
 
-        if (true) {
-            findUser.updateRecentlyPublishedDate(LocalDateTime.now());
-            article.setUser(findUser);
-            return articleRepository.save(article);
-        } else {
-            throw new NotEnoughDaysForPublishingException();
+        final User findUser = userService.findById(userId);
+        final LocalDateTime mostRecentlyPublishedDateTime = findUser.getRecentlyPublishedDateTime();
+        final LocalDateTime publishableDateTimeLimit = mostRecentlyPublishedDateTime.plusDays(SEVEN_DAYS);
+        final Article article = findUpdatableArticleByArticleIdAndUserId(articleId, userId);
+        validatePublishable(now, publishableDateTimeLimit, article);
+        article.makePublish(now);
+        findUser.updateRecentlyPublishedDateTime(now);
+        return ArticleResponse.of(article);
+    }
+
+    private void validatePublishable(LocalDateTime now, LocalDateTime publishableDateTimeLimit, Article article) {
+        if (cannotPublish(now, publishableDateTimeLimit)) {
+            throw new IllegalStateException(ERROR_MESSAGE_NOT_ENOUGH_DAYS_TO_PUBLISH);
+        }
+
+        if (article.getArticleStatus() != ArticleStatus.DRAFT) {
+            throw new IllegalStateException(ERROR_MESSAGE_ALREADY_PUBLIC_ARTICLE);
         }
     }
 
-    private boolean canPublishArticle(LocalDateTime date) {
-        return date == null || isMoreThanSevenDays(date);
+    private boolean cannotPublish(LocalDateTime now, LocalDateTime publishableDateTimeLimit) {
+        return !now.isAfter(publishableDateTimeLimit);
     }
-
-    private boolean isMoreThanSevenDays(LocalDateTime date) {
-        return Duration
-                .between(date, LocalDateTime.now())
-                .toDays() >= SEVEN_DAYS;
-    }
-
-
 
     @Transactional
     public void deleteById(Long articleId, Long userId) {
@@ -88,12 +91,12 @@ public class ArticleService {
     }
 
     @Transactional
-    public Article updateArticle(Long articleId, Long userId, ArticlePublishFormRequest form) {
+    public Article updateArticle(Long articleId, Long userId, ArticleUpdateRequest request) {
         final Article findArticle = findUpdatableArticleByArticleIdAndUserId(articleId, userId);
 
-        findArticle.updateTitle(form.getTitle());
-        findArticle.updateContent(form.getContent());
-        findArticle.updateExcerpt(form.getExcerpt());
+        findArticle.updateTitle(request.getTitle());
+        findArticle.updateContent(request.getContent());
+        findArticle.updateExcerpt(request.getExcerpt());
 
         return findArticle;
     }
@@ -104,9 +107,12 @@ public class ArticleService {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-
-    public List<Article> getRecentArticles() {
-        return articleRepository.findAllWithUserProfile();
+    public List<ArticleResponse> getAllRecentArticlesOrderByCreatedDate() {
+        return articleRepository
+                .findAllWithUserAndProfile()
+                .stream()
+                .map(ArticleResponse::ofMetaData)
+                .toList();
     }
 
     public Article findById(Long articleId) {

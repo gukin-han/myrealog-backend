@@ -88,8 +88,8 @@ The Key Features followed by:
 |---------|-------------------------------------------------|----------------------------------------|------|---------|
 | POST    | `/api/v1/articles/{articleId}/discussions/new`  | Create new discussion in the article   | ✔    |         |
 | GET     | `/api/v1/articles/{articleId}/discussions`      | Get All article related discussions    |      |         |
-| PATCH   | `/api/v1/discussions/{discussionId}`            | Update given {id} discussion           | ✔    |         |
-| DELETE  | `/api/v1/discussions/{discussionId}`            | Delete given {id} discussion           | ✔    |         |
+| PATCH   | `/api/v1/discussions/{discussionId}`            | Update given {discussionId} discussion | ✔    |         |
+| DELETE  | `/api/v1/discussions/{discussionId}`            | Delete given {discussionId} discussion | ✔    |         |
 <br />
 
 

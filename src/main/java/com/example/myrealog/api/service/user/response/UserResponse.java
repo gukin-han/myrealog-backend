@@ -33,7 +33,6 @@ public class UserResponse {
                 .id(user.getId())
                 .profile(ProfileResponse.of(user.getProfile()))
                 .username(user.getUsername())
-                .email(user.getEmail())
                 .build();
     }
 }

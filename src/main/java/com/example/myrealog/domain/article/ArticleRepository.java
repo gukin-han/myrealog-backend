@@ -42,7 +42,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             WHERE article.articleStatus = 'PUBLIC'
             ORDER BY article.id DESC
            """)
-    List<Article> findAllWithUserProfile();
+    List<Article> findAllWithUserAndProfile();
 
 
     Optional<Article> findTopByUserAndArticleStatusOrderByCreatedDateTimeDesc(User user, ArticleStatus articleStatus);

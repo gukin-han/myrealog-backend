@@ -38,6 +38,10 @@ public class Profile extends BaseTimeEntity {
     }
 
     public static Profile of(String displayName, String bio) {
-        return new Profile(displayName, bio, "");
+        return Profile.builder()
+                .displayName(displayName)
+                .bio(bio)
+                .avatarUrl("")
+                .build();
     }
 }

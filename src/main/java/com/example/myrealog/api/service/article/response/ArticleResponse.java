@@ -49,4 +49,15 @@ public class ArticleResponse {
                 .status(article.getArticleStatus())
                 .build();
     }
+
+    public static ArticleResponse ofMetaData(Article article) {
+        return ArticleResponse.builder()
+                .id(article.getId())
+                .title(article.getTitle())
+                .slug(article.getSlug())
+                .user(UserResponse.of(article.getUser()))
+                .thumbnailUrl(article.getThumbnailUrl())
+                .excerpt(article.getExcerpt())
+                .build();
+    }
 }

@@ -6,7 +6,9 @@ import com.example.myrealog.domain.user.User;
 import com.example.myrealog.v1.model.*;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -59,8 +61,10 @@ public class Article extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ArticleStatus articleStatus;
 
+    private LocalDateTime publishedDataTime;
+
     @Builder
-    private Article(Long id, User user, Category category, List<ArticleAttachment> articleAttachments, List<ArticleReaction> articleReactions, Topic topic, List<Discussion> discussions, String title, String content, String slug, String thumbnailUrl, String excerpt, int reactionCount, int discussionCount, ArticleStatus articleStatus) {
+    private Article(Long id, User user, Category category, List<ArticleAttachment> articleAttachments, List<ArticleReaction> articleReactions, Topic topic, List<Discussion> discussions, String title, String content, String slug, String thumbnailUrl, String excerpt, int reactionCount, int discussionCount, ArticleStatus articleStatus, LocalDateTime publishedDataTime) {
         this.id = id;
         this.user = user;
         this.category = category;
@@ -76,15 +80,7 @@ public class Article extends BaseTimeEntity {
         this.reactionCount = reactionCount;
         this.discussionCount = discussionCount;
         this.articleStatus = articleStatus;
-    }
-
-    public Article(String title, String content, String excerpt, ArticleStatus articleStatus) {
-        this.title = title;
-        this.content = content;
-        this.articleStatus = articleStatus;
-        this.excerpt = excerpt;
-        this.slug = generateSlug(title);
-        this.thumbnailUrl = "";
+        this.publishedDataTime = publishedDataTime;
     }
 
     public static Article createDraft(User user) {
@@ -119,8 +115,10 @@ public class Article extends BaseTimeEntity {
         return input != null && !input.isEmpty() && !input.isBlank();
     }
 
-    private static void validateInput(String content) {
-
+    public void makePublish(LocalDateTime dateTime) {
+        publishedDataTime = dateTime;
+        articleStatus = ArticleStatus.PUBLIC;
+        slug = generateSlug(title);
     }
 
     private String generateSlug(String title) {

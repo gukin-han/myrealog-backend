@@ -1,6 +1,6 @@
 package com.example.myrealog.api.service.user;
 
-import com.example.myrealog.v1.common.dto.request.UserSignupRequest;
+import com.example.myrealog.v1.common.dto.request.UserSignUpRequest;
 import com.example.myrealog.v1.common.exception.UserNotFoundException;
 import com.example.myrealog.domain.user.User;
 import com.example.myrealog.domain.user.UserRepository;
@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -32,11 +34,11 @@ class UserServiceTest {
     @Test
     void signupTest(){
         //given
-        final UserSignupRequest userSignupRequest = createUserSignupRequest("username1", "displayName1", "bio1");
+        final UserSignUpRequest userSignupRequest = createUserSignupRequest("username1", "displayName1", "bio1");
         final String email ="test@test.com";
 
         //when
-        final User signupUser = userService.signUp(userSignupRequest, email);
+        final User signupUser = userService.signUp(userSignupRequest, email, LocalDateTime.now());
 
         //then
         assertThat(signupUser.getId()).isNotNull();
@@ -55,14 +57,14 @@ class UserServiceTest {
     void signupUserWithDuplicateEmailThrowErrorTest(){
         //given
         final String duplicateEmail ="test@test.com";
-        final UserSignupRequest userSignupRequest = createUserSignupRequest("username1", "displayName1", "bio1");
-        userService.signUp(userSignupRequest, duplicateEmail);
+        final UserSignUpRequest userSignupRequest = createUserSignupRequest("username1", "displayName1", "bio1");
+        userService.signUp(userSignupRequest, duplicateEmail, LocalDateTime.now());
 
         //when
-        final UserSignupRequest userSignupRequest2 = createUserSignupRequest("username2", "displayName2", "bio2");
+        final UserSignUpRequest userSignupRequest2 = createUserSignupRequest("username2", "displayName2", "bio2");
 
         //then
-        assertThatThrownBy(() -> userService.signUp(userSignupRequest2, duplicateEmail))
+        assertThatThrownBy(() -> userService.signUp(userSignupRequest2, duplicateEmail, LocalDateTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("이미 가입된 이메일입니다.");
     }
@@ -73,16 +75,16 @@ class UserServiceTest {
         //given
         final String duplicateUsername = "username1";
 
-        final UserSignupRequest userSignupRequest = createUserSignupRequest(duplicateUsername, "displayName1", "bio1");
+        final UserSignUpRequest userSignupRequest = createUserSignupRequest(duplicateUsername, "displayName1", "bio1");
         final String email1 = "test1@test.com";
-        userService.signUp(userSignupRequest, email1);
+        userService.signUp(userSignupRequest, email1, LocalDateTime.now());
 
         //when
-        final UserSignupRequest userSignupRequest2 = createUserSignupRequest(duplicateUsername, "displayName2", "bio2");
+        final UserSignUpRequest userSignupRequest2 = createUserSignupRequest(duplicateUsername, "displayName2", "bio2");
         final String email2 = "test2@test.com";
 
         //then
-        assertThatThrownBy(() -> userService.signUp(userSignupRequest2, email2))
+        assertThatThrownBy(() -> userService.signUp(userSignupRequest2, email2, LocalDateTime.now()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("중복된 유저이름입니다. 다시 입력해주세요.");
     }
@@ -92,15 +94,15 @@ class UserServiceTest {
     void findUserByIdTest(){
         //given
         final String username1 = "username1";
-        final UserSignupRequest userSignupRequest = createUserSignupRequest(username1, "displayName1", "bio1");
+        final UserSignUpRequest userSignupRequest = createUserSignupRequest(username1, "displayName1", "bio1");
         final String email1 = "test1@test.com";
 
         final String username2 = "username2";
-        final UserSignupRequest userSignupRequest2 = createUserSignupRequest(username2, "displayName1", "bio1");
+        final UserSignUpRequest userSignupRequest2 = createUserSignupRequest(username2, "displayName1", "bio1");
         final String email2 = "test2@test.com";
 
-        final User signupUser1 = userService.signUp(userSignupRequest, email1);
-        final User signupUser2 = userService.signUp(userSignupRequest2, email2);
+        final User signupUser1 = userService.signUp(userSignupRequest, email1, LocalDateTime.now());
+        final User signupUser2 = userService.signUp(userSignupRequest2, email2, LocalDateTime.now());
 
         //when
         final User findUser = userService.findById(signupUser1.getId());
@@ -115,9 +117,9 @@ class UserServiceTest {
     void findUserByNotExistIdThrowErrorTest(){
         //given
         final String username1 = "username1";
-        final UserSignupRequest userSignupRequest = createUserSignupRequest(username1, "displayName1", "bio1");
+        final UserSignUpRequest userSignupRequest = createUserSignupRequest(username1, "displayName1", "bio1");
         final String email1 = "test1@test.com";
-        final User signupUser1 = userService.signUp(userSignupRequest, email1);
+        final User signupUser1 = userService.signUp(userSignupRequest, email1, LocalDateTime.now());
 
         //when
         //then
@@ -125,8 +127,8 @@ class UserServiceTest {
                 .isInstanceOf(UserNotFoundException.class);
     }
 
-    private static UserSignupRequest createUserSignupRequest(String username, String displayName, String bio) {
-        return UserSignupRequest.builder()
+    private static UserSignUpRequest createUserSignupRequest(String username, String displayName, String bio) {
+        return UserSignUpRequest.builder()
                 .username(username)
                 .displayName(displayName)
                 .bio(bio)

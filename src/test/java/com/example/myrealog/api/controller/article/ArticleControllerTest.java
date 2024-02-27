@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -87,6 +86,45 @@ class ArticleControllerTest {
         //given
         //when
         final ResultActions resultActions = performGetRequest("usernameTest", "slugTest");
+
+        //then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.httpStatus").value("OK"))
+                .andExpect(jsonPath("$.message").value(""))
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("최근 게시글을 모두 불러온다.")
+    @Test
+    void getAllRecentArticlesOrderByCreatedDateTest() throws Exception {
+        //given
+        //when
+        final ResultActions resultActions = mockMvc.perform(get("/api/v1/articles/recent")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        resultActions
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.httpStatus").value("OK"))
+                .andExpect(jsonPath("$.message").value(""))
+                .andExpect(jsonPath("$.code").value("200"))
+                .andExpect(jsonPath("$.data").isArray());
+    }
+
+    @DisplayName("초안 아티클을 공개로 게시한다.")
+    @Test
+    void makeDraftPublishTest() throws Exception {
+        //given
+        final int articleId = 1;
+
+        //when
+        final ResultActions resultActions = mockMvc.perform(patch("/api/v1/articles/{articleId}/publish", articleId)
+                .header("Authorization", "accessToken")
+                .contentType(MediaType.APPLICATION_JSON));
 
         //then
         resultActions

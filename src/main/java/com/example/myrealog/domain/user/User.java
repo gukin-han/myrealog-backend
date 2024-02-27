@@ -55,20 +55,26 @@ public class User extends BaseTimeEntity {
 
     private String password;
 
-    private LocalDateTime recentlyPublishedDate;
+    private LocalDateTime recentlyPublishedDateTime;
 
     @Builder
-    private User(Profile profile, String username, String email) {
+    private User(Profile profile, String username, String email, LocalDateTime recentlyPublishedDateTime) {
         this.profile = profile;
         this.username = username;
         this.email = email;
+        this.recentlyPublishedDateTime = recentlyPublishedDateTime;
     }
 
-    public static User create(String email, String username, String displayName, String bio) {
-        return new User(Profile.of(displayName, bio), username, email);
+    public static User of(String email, String username, String displayName, String bio, LocalDateTime now) {
+        return User.builder()
+                .email(email)
+                .username(username)
+                .profile(Profile.of(displayName, bio))
+                .recentlyPublishedDateTime(now)
+                .build();
     }
 
-    public void updateRecentlyPublishedDate(LocalDateTime date) {
-        recentlyPublishedDate = date;
+    public void updateRecentlyPublishedDateTime(LocalDateTime date) {
+        recentlyPublishedDateTime = date;
     }
 }
